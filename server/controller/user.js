@@ -43,7 +43,7 @@ module.exports = {
 
             // get user by username & password
             const data = await User.findOne({
-                attributes: ['username'],
+                attributes: ['id', 'username', 'role'],
                 where: {
                     username, password
                 }
