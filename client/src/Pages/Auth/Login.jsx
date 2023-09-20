@@ -70,10 +70,7 @@ export default function Login({ onSignUp }) {
 
   // handle success log in
   if (HandleLogin.isSuccess) {
-    localStorage.setItem(
-      "auth",
-      JSON.stringify(HandleLogin.data?.data || {})
-    );
+    localStorage.setItem("auth", JSON.stringify(HandleLogin.data?.data || {}));
     navigate("/");
   }
 

@@ -13,3 +13,14 @@ export function Login() {
 
   return { isLoading, isError, isSuccess, error, data, mutate };
 }
+
+export function Register() {
+  const { isLoading, isError, isSuccess, error, data, mutate } = useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await axios.post("user/register", payload);
+      return data;
+    },
+  });
+
+  return { isLoading, isError, isSuccess, error, data, mutate };
+}

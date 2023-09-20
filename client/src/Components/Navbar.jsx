@@ -4,7 +4,7 @@ import logo from "../Assets/Image/logo.png";
 export default function Navbar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Function to scroll to the section with the given ID
   const scrollToSection = (id) => {
@@ -15,7 +15,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="h-screen w-screen overflow-auto">
       <div className="w-full h-20 shadow-sm flex justify-between items-center px-5 sm:px-10 inset-0  absolute top-0 backdrop-blur-md bg-white/30">
         <div className="flex items-center space-x-4">
           <img src={logo} alt="" className="w-7 sm:w-10 aspect-square" />
@@ -37,7 +37,7 @@ export default function Navbar() {
               Layanan Kami
             </div>
             <div> | </div>
-            <div className="cursor-pointer" onClick={() => navigate('/login')}>
+            <div className="cursor-pointer" onClick={() => navigate("/login")}>
               Daftar
             </div>
           </div>

@@ -8,7 +8,7 @@ export default function InputField({
   name,
 }) {
   return (
-    <>
+    <div className="flex flex-col">
       <input
         type={type || "text"}
         name={name || ""}
@@ -23,8 +23,8 @@ export default function InputField({
       />
 
       {errorMessage && (
-        <small className="text-[#FF4949]"> {errorMessage} </small>
+        <small className="text-[#FF4949] indent-2"> {errorMessage} </small>
       )}
-    </>
+    </div>
   );
 }

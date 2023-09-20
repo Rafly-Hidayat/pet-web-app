@@ -1,34 +1,124 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import InputField from "../../Components/InputField";
+import { Register } from "../../Utils/store";
+
 export default function Signup({ onLogin }) {
+  const [payloadSignup, setPayloadSignup] = useState({
+    username: "",
+    password: "",
+    fullName: "",
+    email: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState({
+    username: "",
+    password: "",
+    fullName: "",
+    email: "",
+  });
+
+  const navigate = useNavigate();
+  const HandleSignup = Register();
+
+  useEffect(() => {
+    if (HandleSignup.isError) {
+      if (HandleSignup.error?.response?.data?.message.includes("email")) {
+        setErrorMessage({
+          email: HandleSignup.error?.response?.data?.message,
+        });
+      } else if (
+        HandleSignup.error?.response?.data?.message.includes("Username")
+      ) {
+        setErrorMessage({
+          username: HandleSignup.error?.response?.data?.message,
+        });
+      }
+    }
+  }, [HandleSignup.isError]);
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+
+    setPayloadSignup((prev) => {
+      return { ...prev, [name]: value };
+    });
+
+    if (value) {
+      setErrorMessage((prev) => {
+        return { ...prev, [name]: "" };
+      });
+    } else {
+      setErrorMessage((prev) => {
+        return {
+          ...prev,
+          [name]: `Kolom ini tidak boleh kosong`,
+        };
+      });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (Object.values(payloadSignup).every((v) => v)) {
+      HandleSignup.mutate(payloadSignup);
+    } else {
+      Object.keys(payloadSignup).map((payload) => {
+        if (!payloadSignup[payload]) {
+          setErrorMessage((prev) => {
+            return {
+              ...prev,
+              [payload]: `Kolom ini tidak boleh kosong`,
+            };
+          });
+        }
+      });
+    }
+  };
+
+  if (HandleSignup.isSuccess) {
+    localStorage.setItem("auth", JSON.stringify(HandleSignup.data?.data || {}));
+    navigate("/");
+  }
+
   return (
     <>
       <div className="text-slate-700">Buat Akun Sekarang</div>
 
-      <form action="" className="w-full" onSubmit={() => {}}>
+      <form action="" className="w-full" onSubmit={handleSubmit}>
         <div className="space-y-3">
-          <input
+          <InputField
             type="text"
-            className="w-full text-slate-700 rounded-md border border-gray-400 bg-transparent p-2 placeholder:text-sm placeholder:italic focus:outline-[#FF834F]"
             placeholder="Nama Lengkap"
+            name="fullName"
+            value={payloadSignup.fullName}
+            onChange={handleChange}
+            errorMessage={errorMessage.fullName}
           />
-          <input
+          <InputField
             type="text"
-            className="w-full text-slate-700 rounded-md border border-gray-400 bg-transparent p-2 placeholder:text-sm placeholder:italic focus:outline-[#FF834F]"
             placeholder="Email"
+            name="email"
+            value={payloadSignup.email}
+            onChange={handleChange}
+            errorMessage={errorMessage.email}
           />
-          <input
+          <InputField
             type="text"
-            className="w-full text-slate-700 rounded-md border border-gray-400 bg-transparent p-2 placeholder:text-sm placeholder:italic focus:outline-[#FF834F]"
             placeholder="Username"
+            name="username"
+            value={payloadSignup.username}
+            onChange={handleChange}
+            errorMessage={errorMessage.username}
           />
-          <input
+          <InputField
             type="password"
-            className="w-full text-slate-700 rounded-md border border-gray-400 bg-transparent p-2 placeholder:text-sm placeholder:italic focus:outline-[#FF834F]"
             placeholder="Buat Kata Sandi"
-          />
-          <input
-            type="password"
-            className="w-full text-slate-700 rounded-md border border-gray-400 bg-transparent p-2 placeholder:text-sm placeholder:italic focus:outline-[#FF834F]"
-            placeholder="Konfirmasi Kata Sandi"
+            name="password"
+            value={payloadSignup.password}
+            onChange={handleChange}
+            errorMessage={errorMessage.password}
           />
         </div>
 
@@ -41,9 +131,13 @@ export default function Signup({ onLogin }) {
       </form>
       <div className="w-full text-slate-700 text-center text-sm flex items-center justify-center space-x-1">
         <div>Sudah memiliki akun?</div>
-        <div className="text-[#FF834F]" onClick={() => onLogin()}>Masuk</div>
+        <div
+          className="text-[#FF834F] cursor-pointer"
+          onClick={() => onLogin()}
+        >
+          Masuk
         </div>
-
+      </div>
     </>
   );
 }

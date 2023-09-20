@@ -1,39 +1,57 @@
 import { useEffect, useState } from "react";
-// import logo from "../../Assets/Image/logo.png";
 import Login from "./Login";
 import Signup from "./Signup";
+import windowResize from "../../Utils/windowResize";
+import imageLogin from "../../Assets/Image/login.jpg";
+import imageSignup from "../../Assets/Image/signup.jpg";
 
 export default function Index() {
   const [isSignUpPage, setIsSignUpPage] = useState(false);
+  const { width } = windowResize();
 
   useEffect(() => {
-    console.log(isSignUpPage, 'isSignUpPage isStatement')
-  }, [isSignUpPage])
+    console.log(isSignUpPage, "isSignUpPage isStatement");
+  }, [isSignUpPage]);
 
   return (
-    <div className="bg-[#F6FFFD] w-full h-full flex justify-center items-center">
-      <div className="w-[80%] flex flex-col items-center space-y-4">
-        {/* <div className="flex space-x-4 items-center">
-          <img src={logo} alt="Logo" className="w-10" />
-        </div> */}
-        <div className="text-center">
-          <div className="text-2xl text-slate-700">Petwebcare</div>
-          <div className="text-slate-700">
-            Untuk Hewan Peliharan Anda
+    <div className="bg-[#F6FFFD] w-screen h-screen flex justify-center items-center">
+      {width <= 1000 ? (
+        <div className="w-[80%] flex flex-col items-center space-y-4">
+          <div className="text-center">
+            <div className="text-2xl text-slate-700">Petwebcare</div>
+            <div className="text-slate-700">Untuk Hewan Peliharan Anda</div>
           </div>
-        </div>
 
-        {/* <img src={logo} alt="Logo" className="w-16" /> */}
-
-        {
-          isSignUpPage ? (
+          {isSignUpPage ? (
             <Signup onLogin={() => setIsSignUpPage(false)} />
           ) : (
             <Login onSignUp={() => setIsSignUpPage(true)} />
-          )
-        }
+          )}
+        </div>
+      ) : (
+        <div className="w-[65%] h-[80%] bg-white shadow-lg grid grid-cols-2 rounded-lg overflow-hidden">
+          <div
+            className="h-full transition-all duration-1000 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${
+                isSignUpPage ? imageSignup : imageLogin
+              })`,
+            }}
+          />
+          <div className="flex flex-col items-center justify-center space-y-2 p-10 overflow-auto">
+            <div className="text-center">
+              <div className="text-xl text-slate-700">Petwebcare</div>
+              <div className="text-slate-700">Untuk Hewan Peliharan Anda</div>
+            </div>
 
-      </div>
+            {isSignUpPage ? (
+              <Signup onLogin={() => setIsSignUpPage(false)} />
+            ) : (
+              <Login onSignUp={() => setIsSignUpPage(true)} />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
