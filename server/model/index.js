@@ -13,7 +13,10 @@ db.sequelize = sequelize;
 
 // set the models
 db.models = {};
-db.models.User = require('./user')(sequelize, Sequelize.DataTypes); // user model
-db.models.Vet = require('./vet')(sequelize, Sequelize.DataTypes); // user model
+db.models.Vet = require('./vet.model')(sequelize, Sequelize.DataTypes); // user model
+db.models.User = require('./user.model')(sequelize, Sequelize.DataTypes); // user model
+
+db.models.DataVet = db.models.User.belongsTo(db.models.Vet, { as: 'dataVet', foreignKey: 'vetId' });
+
 
 module.exports = db;

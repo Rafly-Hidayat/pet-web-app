@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LandingPage from "../Pages/LandingPage/Index";
 import Auth from "../Pages/Auth/Index";
+import Test from "../Pages/test";
 import Navbar from "../Components/Navbar";
 
 export const router = createBrowserRouter([
@@ -11,6 +12,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <LandingPage />
+      },
+      {
+        path: "/tes",
+        element: <Test />
       }
     ]
   },

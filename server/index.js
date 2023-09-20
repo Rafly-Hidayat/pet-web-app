@@ -2,22 +2,22 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const upload = require("express-fileupload");
 const { faker } = require('@faker-js/faker/locale/id_ID');
+const { createCanvas, loadImage, registerFont } = require('canvas');
+const fs = require('fs');
+
 
 // Import file
-const db = require('./model/index');
+const { models: { DataVet, User }, sequelize } = require('./model/index');
 
 const app = express(); // Create express app
 const port = 8000; // port localhost
 
 // use NPM
-app.use("/public", express.static(path.join(__dirname, "/public"))); // Static folder for file public
+// app.use("/public", express.static(path.join(__dirname, "/public"))); // Static folder for file public
+// app.use("/uploads", express.static(path.join(__dirname, "/uploads"))); // Static folder for file public
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(upload({
-    createParentPath: true
-})); // use express-fileupload for upload file
 
 // set up cors
 // const whiteList = [ 'https://www.google.com/', 'http://localhost:3000/' ];
@@ -28,12 +28,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// connecting route to database
+// syncrhonize database and set default values
 (async () => {
     // syncrhonize the database with the defined models
-    await db.sequelize.sync({ force: true });
+    await sequelize.sync();
 
-    // set default vet table
     const specialties = [
         "Kesejahteraan Hewan",
         "Anesthesia and Analgesia",
@@ -60,35 +59,19 @@ app.use(cors(corsOptions));
     ];
     const animals = ['Kucing', 'Anjing', 'Kelinci', 'Burung', 'Reptil',
         'Hamster', 'Kuda', 'Sapi', 'Kambing', 'Bebek',]
-    const rowVet = await db.models.Vet.count();
-    if (rowVet === 0) {
-        const defaultValues = [];
-
-        while (defaultValues.length < specialties.length) {
-            const randomNumber = Math.floor(Math.random() * 22);
-            const randomValue = {
-                address: faker.location.streetAddress(),
-                specialist: specialties[defaultValues.length],
-                experience: randomNumber,
-                treatedAnimals: animals[Math.floor(Math.random() * 10)]
-            };
-            defaultValues.push(randomValue);
-        }
-        await db.models.Vet.bulkCreate(defaultValues)
-
-    }
 
     // set default user
-    const rowUsers = await db.models.User.count();
+    const rowUsers = await User.count();
     if (rowUsers === 0) {
         // create a default user account
-        await db.models.User.create({ username: 'tesUsername', password: 'tesPassword' });
+        await User.create({ username: 'tesUsername', password: 'tesPassword' });
 
         // create a default vet account
         const defaultValues = [];
         const uniqueUserNames = new Set();
 
-        while (defaultValues.length < 100) {
+        while (defaultValues.length < 10) {
+            const randomNumber = Math.floor(Math.random() * 22);
             const fullName = faker.person.fullName();
             const randomValue = {
                 username: fullName,
@@ -96,7 +79,12 @@ app.use(cors(corsOptions));
                 fullName,
                 email: faker.internet.email(),
                 role: 'vet',
-                idVet: Math.floor(Math.random() * 22),
+                dataVet: {
+                    address: faker.location.streetAddress(),
+                    specialist: specialties[defaultValues.length],
+                    experience: randomNumber,
+                    treatedAnimals: animals[Math.floor(Math.random() * 10)]
+                },
             };
             if (!uniqueUserNames.has(randomValue.username)) {
                 defaultValues.push(randomValue);
@@ -104,14 +92,55 @@ app.use(cors(corsOptions));
             }
         }
 
-        await db.models.User.bulkCreate(defaultValues)
+        await User.bulkCreate(defaultValues, {
+            include: [DataVet]
+        })
     }
 })();
-
+console.log(path.join(__dirname, ''))
 // import routes
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user.routes');
 
 // use routes
 app.use('/user', userRoutes);
+
+async function generateProfileImage(outputFilePath) {
+    const canvas = createCanvas(200, 200);
+    const ctx = canvas.getContext('2d');
+
+    // Background color and size
+    ctx.fillStyle = '#3498db';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Text color and font
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '36px "Your Font Family"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Get the initials
+    const initials = 'R';
+
+    // Draw the initials
+    ctx.fillText(initials, canvas.width / 2, canvas.height / 2);
+
+    // Save the image to a file
+    const imageStream = canvas.createPNGStream();
+    const writeStream = fs.createWriteStream(outputFilePath);
+    imageStream.pipe(writeStream);
+
+    await new Promise((resolve, reject) => {
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
+    });
+}
+
+generateProfileImage('uploads/tes.jpg')
+    .then(() => {
+        console.log('Profile image generated successfully.');
+    })
+    .catch((error) => {
+        console.error('Error generating profile image:', error);
+    });
 
 app.listen(port, () => { console.log(`Server is running on port ${port}`) }); // listen port
