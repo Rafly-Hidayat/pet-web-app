@@ -23,8 +23,14 @@ module.exports = {
             }
 
             // create new user
-            const data = await User.create({
+            const createData = await User.create({
                 username, password, fullName, email, role,
+            });
+            const data = await User.findOne({
+                attributes: ['id', 'username', 'role'],
+                where: {
+                    id: createData.id
+                }
             });
             return response({
                 res, statusCode: 200, message: 'Daftar Berhasil', data, type: 'SUCCESS', name: 'register user'
