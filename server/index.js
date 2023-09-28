@@ -3,19 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const { faker } = require('@faker-js/faker/locale/id_ID');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const fs = require('fs');
-
+const moment = require("moment/moment");
 
 // Import file
-const { models: { DataVet, User }, sequelize } = require('./model/index');
+const { models: { DataUser, User, Vet }, sequelize } = require('./model/index');
 
 const app = express(); // Create express app
 const port = 8000; // port localhost
 
-// use NPM
-// app.use("/public", express.static(path.join(__dirname, "/public"))); // Static folder for file public
-// app.use("/uploads", express.static(path.join(__dirname, "/uploads"))); // Static folder for file public
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -64,8 +59,10 @@ app.use(cors(corsOptions));
     const rowUsers = await User.count();
     if (rowUsers === 0) {
         // create a default user account
-        await User.create({ username: 'tesUsername', password: 'tesPassword' });
-
+        await User.create({ username: 'tesUsername', password: 'tesPassword', fullName: 'tesFullName', email: 'tesEmail' });
+    }
+    const rowVet = await Vet.count();
+    if (rowVet === 0) {
         // create a default vet account
         const defaultValues = [];
         const uniqueUserNames = new Set();
@@ -74,73 +71,40 @@ app.use(cors(corsOptions));
             const randomNumber = Math.floor(Math.random() * 22);
             const fullName = faker.person.fullName();
             const randomValue = {
-                username: fullName,
-                password: fullName,
-                fullName,
-                email: faker.internet.email(),
-                role: 'vet',
-                dataVet: {
-                    address: faker.location.streetAddress(),
-                    specialist: specialties[defaultValues.length],
-                    experience: randomNumber,
-                    treatedAnimals: animals[Math.floor(Math.random() * 10)]
+                address: faker.location.streetAddress(),
+                specialist: specialties[defaultValues.length],
+                experience: randomNumber,
+                treatedAnimals: animals[Math.floor(Math.random() * 10)],
+                operationHours: '08:00 - 17:00',
+                user: {
+                    username: fullName,
+                    password: fullName,
+                    fullName,
+                    email: faker.internet.email(),
+                    role: 'vet',
                 },
             };
-            if (!uniqueUserNames.has(randomValue.username)) {
+            if (!uniqueUserNames.has(randomValue.user.username)) {
                 defaultValues.push(randomValue);
-                uniqueUserNames.add(randomValue.username);
+                uniqueUserNames.add(randomValue.user.username);
             }
         }
 
-        await User.bulkCreate(defaultValues, {
-            include: [DataVet]
+        await Vet.bulkCreate(defaultValues, {
+            include: [DataUser]
         })
     }
+
 })();
 console.log(path.join(__dirname, ''))
 // import routes
 const userRoutes = require('./routes/user.routes');
+const vetRoutes = require('./routes/vet.routes');
+const scheduleRoutes = require('./routes/schedule.routes');
 
 // use routes
 app.use('/user', userRoutes);
-
-async function generateProfileImage(outputFilePath) {
-    const canvas = createCanvas(200, 200);
-    const ctx = canvas.getContext('2d');
-
-    // Background color and size
-    ctx.fillStyle = '#3498db';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Text color and font
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '36px "Your Font Family"';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    // Get the initials
-    const initials = 'R';
-
-    // Draw the initials
-    ctx.fillText(initials, canvas.width / 2, canvas.height / 2);
-
-    // Save the image to a file
-    const imageStream = canvas.createPNGStream();
-    const writeStream = fs.createWriteStream(outputFilePath);
-    imageStream.pipe(writeStream);
-
-    await new Promise((resolve, reject) => {
-        writeStream.on('finish', resolve);
-        writeStream.on('error', reject);
-    });
-}
-
-generateProfileImage('uploads/tes.jpg')
-    .then(() => {
-        console.log('Profile image generated successfully.');
-    })
-    .catch((error) => {
-        console.error('Error generating profile image:', error);
-    });
+app.use('/vet', vetRoutes);
+app.use('/schedule', scheduleRoutes);
 
 app.listen(port, () => { console.log(`Server is running on port ${port}`) }); // listen port

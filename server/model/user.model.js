@@ -31,10 +31,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false, // set column not null
                 defaultValue: 'user', // set column default value
             },
-            // idVet: {
-            //     type: DataTypes.INTEGER, // set column type
-            //     allowNull: true // set column not null
-            // },
         },
         // optional
         {

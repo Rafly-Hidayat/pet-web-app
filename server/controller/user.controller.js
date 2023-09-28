@@ -1,11 +1,8 @@
 const response = require('../utils/response');
-const { models: { User, Vet, DataVet } } = require('../model/index');
+const { models: { User, Vet } } = require('../model/index');
 const Sequelize = require('sequelize');
 const path = require("path");
-const mime = require('mime');
 const fs = require('fs');
-
-// const DataVet = User.belongsTo(Vet, { as: 'dataVet', foreignKey: 'vetId' });
 
 module.exports = {
 
@@ -33,7 +30,7 @@ module.exports = {
                 username, password, fullName, email, role,
             });
             const data = await User.findOne({
-                attributes: ['id', 'username', 'role'],
+                attributes: { exclude: ['password'] },
                 where: {
                     id: createData.id
                 }
@@ -55,7 +52,7 @@ module.exports = {
 
             // get user by username & password
             const data = await User.findOne({
-                attributes: ['id', 'username', 'role'],
+                attributes: { exclude: ['password'] },
                 where: {
                     username, password
                 }
@@ -78,77 +75,39 @@ module.exports = {
         }
     },
 
-    getListVet: async (req, res) => {
+    update: async (req, res) => {
         try {
-            // get list user where role = vet
-            const dataUser = await User.findAll({
-                include: {
-                    model: Vet,
-                    as: 'dataVet',
-                    attributes: ['address', 'experience', 'specialist', 'treatedAnimals']
-                },
-                attributes: ['username', 'fullname', 'email'],
+            const { fullName, email, id } = req.body
+            const dataUser = await User.findOne({
                 where: {
-                    role: 'vet',
+                    id,
+                    role: 'user'
                 }
             })
 
-            // validate is user with role vet doesnt exists
-            if (!dataUser.length) {
+            if (!dataUser) {
                 return response({
-                    res, statusCode: 404, message: 'Dokter Hewan tidak ditemukan!', data: req.body, type: 'ERROR', name: 'getListVet'
+                    res, statusCode: 404, message: 'User ini tidak ditemukan!', data: req.body, type: 'ERROR', name: 'update user'
                 });
             }
 
-            // console.log(dataUser.flatmap())
-
-            return response({
-                res, statusCode: 200, message: 'Berhasil!', data: dataUser, type: 'SUCCESS', name: 'getListVet'
-            });
-        } catch (error) {
-            return response({
-                res, statusCode: 500, message: 'Error getListVet', data: error.stack.split('\n'), type: 'ERROR', name: 'getListVet'
-            });
-        }
-    },
-
-    update: async (req, res) => {
-        try {
-            const { fullName, email, addreess, experiance, spesialist, treatedAnimals } = req.body
-            const result = await Sequelize.Transaction(async (updateData) => {
-                const dataUser = await User.findOne({
-                    where: {
-                        id: req.params.id
-                    }
-                })
-
-                if (!dataUser) {
-                    return response({
-                        res, statusCode: 404, message: 'User tidak ditemukan!', data: req.body, type: 'ERROR', name: 'update User'
-                    });
+            await User.update({ fullName, email }, {
+                where: {
+                    id: dataUser.id
                 }
-
-                const updateUser = await User.update(
-                    { fullName, email },
-                    {
-                        where: {
-                            id: dataUser.id
-                        }
-                    }, { transaction: updateData }
-                )
-
-                if (dataUser.role === 'vet') {
-                    const updateVet = await Vet.update(
-                        { addreess, experiance, spesialist, treatedAnimals },
-                        {
-                            where: {
-                                id: dataUser.idVet
-                            }
-                        }, { transaction: updateData }
-                    )
-                }
-
             })
+
+            const data = await User.findOne({
+                attributes: { exclude: ['password'] },
+                where: {
+                    id,
+                    role: 'user'
+                }
+            })
+
+            return response({
+                res, statusCode: 200, message: 'Update Berhasil', data, type: 'SUCCESS', name: 'update user'
+            });
         } catch (error) {
             return response({
                 res, statusCode: 500, message: 'Error update User', data: error.stack.split('\n'), type: 'ERROR', name: 'update User'
@@ -183,7 +142,7 @@ module.exports = {
                 where: {
                     id: req.params.id
                 }
-            })  
+            })
 
             // const filePath = path.resolve(`${dataUser.image}`)
             const filePath = path.join(__dirname, '..', dataUser.image);

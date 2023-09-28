@@ -15,8 +15,10 @@ db.sequelize = sequelize;
 db.models = {};
 db.models.Vet = require('./vet.model')(sequelize, Sequelize.DataTypes); // user model
 db.models.User = require('./user.model')(sequelize, Sequelize.DataTypes); // user model
+db.models.Schedulled = require('./schedule.model')(sequelize, Sequelize.DataTypes); // schedule model
 
-db.models.DataVet = db.models.User.belongsTo(db.models.Vet, { as: 'dataVet', foreignKey: 'vetId' });
-
+db.models.DataUser = db.models.Vet.belongsTo(db.models.User, { as: 'user' });
+db.models.Schedulled.belongsTo(db.models.User, { as: 'user' });
+db.models.Schedulled.belongsTo(db.models.Vet, { as: 'vet' });
 
 module.exports = db;

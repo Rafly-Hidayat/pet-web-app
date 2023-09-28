@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT, // set column type
                 allowNull: true // set column not null
             },
+            operationHours: {
+                type: DataTypes.STRING, // set column type
+                allowNull: true // set column not null
+            }
         },
         // optional
         {
