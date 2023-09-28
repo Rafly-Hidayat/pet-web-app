@@ -5,11 +5,47 @@ import fromHome from "../../Assets/Image/fromHome.png";
 import technology from "../../Assets/Image/technology.png";
 import { Wave } from "../../Assets/svg/SVG";
 import petStep from "../../Assets/svg/petStep.svg";
+import logo from "../../Assets/Image/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Index() {
+  const navigate = useNavigate();
+
+  // Function to scroll to the section with the given ID
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
-    <div className="scroll-smooth overflow-scroll w-full h-full">
-      <div className="  w-full h-full">
+    <div className="h-screen w-screen overflow-auto">
+      <div className="w-full h-20 shadow-sm flex justify-between items-center px-5 sm:px-10 inset-0  absolute top-0 backdrop-blur-md bg-white/30">
+        <div className="flex items-center space-x-4">
+          <img src={logo} alt="" className="w-7 sm:w-10 aspect-square" />
+          <div className="text-xl sm:text-2xl font-semibold">Petwebcare</div>
+        </div>
+        <div className="hidden items-center space-x-2 sm:flex">
+          <div
+            className="cursor-pointer"
+            onClick={() => scrollToSection("misi")}
+          >
+            Misi Kami
+          </div>
+          <div className="w-2 h-2 rounded-full bg-[#f3ab7b]"></div>
+          <div
+            className="cursor-pointer"
+            onClick={() => scrollToSection("layanan")}
+          >
+            Layanan Kami
+          </div>
+          <div> | </div>
+          <div className="cursor-pointer" onClick={() => navigate("/login")}>
+            Daftar
+          </div>
+        </div>
+      </div>
+      <div className="scroll-smooth overflow-scroll w-full h-full">
         {/* Slogan */}
         <div className="bg-[#ffffff] w-full sm:grid grid-cols-2 gap-4  content-center pt-24 pb-4">
           <div
@@ -35,7 +71,6 @@ export default function Index() {
             style={{ backgroundImage: `url(${landingPage1})` }}
           />
         </div>
-
         {/* Misi */}
         <div
           id="misi"
@@ -126,11 +161,9 @@ export default function Index() {
             </div>
           </div>
         </div>
-
         {/* Services */}
         <div className="w-full bg-[#ffffff] -mt-3">
           <Wave fill="#F8F5F2" />
-
           <div
             id="layanan"
             className="my-5 w-full md:w-[80%] md:h-[550px] bg-[#E8ECED] md:rounded-r-full md:flex flex-col justify-center items-center md:space-y-20"
@@ -141,7 +174,6 @@ export default function Index() {
             >
               Layanan Kami
             </div>
-
             <div className="px-10 flex items-center space-x-10">
               <div className="space-y-5">
                 <div className="flex items-center justify-center space-x-2">
@@ -170,35 +202,34 @@ export default function Index() {
                 </div>
               </div>
               {/* <div className="space-y-5">
-                <div className="flex items-center justify-center space-x-2">
-                  <img
-                    src={petStep}
-                    alt="pet step"
-                    className="w-5 aspect-square"
-                  />
-                  <div className="text-slate-700 text-lg">
-                    Jadwalkan Kunjungan Langsung
+                  <div className="flex items-center justify-center space-x-2">
+                    <img
+                      src={petStep}
+                      alt="pet step"
+                      className="w-5 aspect-square"
+                    />
+                    <div className="text-slate-700 text-lg">
+                      Jadwalkan Kunjungan Langsung
+                    </div>
+                    <img
+                      src={petStep}
+                      alt="pet step"
+                      className="w-5 aspect-square"
+                    />
                   </div>
-                  <img
-                    src={petStep}
-                    alt="pet step"
-                    className="w-5 aspect-square"
-                  />
-                </div>
-                <div className="text-slate-700">
-                  Perawatan yang Personal dan Menyeluruh untuk Hewan Peliharaan
-                  Anda! Jadwalkan Kunjungan Langsung dengan dokter hewan kami
-                  untuk pemeriksaan yang lebih mendalam dan perawatan yang
-                  disesuaikan. Kami hadir di tempat Anda, memberikan perawatan
-                  yang diberikan dengan cinta dan perhatian. Jangan kompromi
-                  dalam merawat hewan peliharaan Anda, jadwalkan kunjungan
-                  sekarang untuk kesehatan yang optimal!
-                </div>
-              </div> */}
+                  <div className="text-slate-700">
+                    Perawatan yang Personal dan Menyeluruh untuk Hewan Peliharaan
+                    Anda! Jadwalkan Kunjungan Langsung dengan dokter hewan kami
+                    untuk pemeriksaan yang lebih mendalam dan perawatan yang
+                    disesuaikan. Kami hadir di tempat Anda, memberikan perawatan
+                    yang diberikan dengan cinta dan perhatian. Jangan kompromi
+                    dalam merawat hewan peliharaan Anda, jadwalkan kunjungan
+                    sekarang untuk kesehatan yang optimal!
+                  </div>
+                </div> */}
             </div>
           </div>
         </div>
-
         {/* Footer */}
         <div className="w-full">
           <div className="text-center md:py-4 text-slate-700">

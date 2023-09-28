@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LandingPage from "../Pages/LandingPage/Index";
 import Auth from "../Pages/Auth/Index";
-import Test from "../Pages/test";
+import Main from "../Pages/MainPage/Index";
 import Navbar from "../Components/Navbar";
 
 export const router = createBrowserRouter([
@@ -11,13 +11,13 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LandingPage />
-      },
-      {
-        path: "/tes",
-        element: <Test />
+        element: <Main />
       }
     ]
+  },
+  {
+    path: "/index",
+    element: <LandingPage />
   },
   {
     path: "/login",
