@@ -54,8 +54,11 @@ export default function Navbar() {
                 !isDropdown && "hidden"
               }`}
             >
-              {menus.map((menu) => (
-                <li className="flex space-x-2 items-center py-2 px-3 bg-gray-100 hover:bg-gray-200" key={menu}>
+              {menus.map((menu, idx) => (
+                <li
+                  className="flex space-x-2 items-center py-2 px-3 bg-gray-100 hover:bg-gray-200"
+                  key={idx}
+                >
                   <span className="text-lg">{menu.icon}</span>
                   <div className="cursor-pointer w-full text-sm block whitespace-no-wrap">
                     {menu.label}

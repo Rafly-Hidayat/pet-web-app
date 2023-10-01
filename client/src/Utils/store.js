@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 axios.defaults.baseURL = 'http://localhost:8000/';
@@ -23,4 +23,13 @@ export function Register() {
   });
 
   return { isLoading, isError, isSuccess, error, data, mutate };
+}
+
+export function VetList() {
+  const { isLoading, isError, isSuccess, error, data } = useQuery(['vetList'], async () => {
+    const { data } = await axios.get("vet/list");
+    return data;
+  });
+
+  return { isLoading, isError, isSuccess, error, data };
 }

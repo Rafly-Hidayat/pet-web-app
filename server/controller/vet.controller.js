@@ -23,7 +23,7 @@ module.exports = {
             });
         } catch (error) {
             return response({
-                res, statusCode: 500, message: 'Error getData', data: error.stack.split('\n'), type: 'ERROR', name: 'getData user vet'
+                res, statusCode: 500, message: 'Error getData', data: error, type: 'ERROR', name: 'getData user vet'
             });
         }
     }
