@@ -2,7 +2,10 @@ import landingPage1 from "../../Assets/Image/LandingPage.png";
 import logo from "../../Assets/Image/logo.png";
 import { BsWhatsapp, BsTiktok } from "react-icons/bs";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 export default function Index() {
+  const navigate = useNavigate();
   return (
     <div className="bg-[#F6FFFD] w-screen h-screen relative overflow-x-hidden">
       <div className="w-full h-20 flex items-center px-5 sm:px-10 inset-0 absolute top-0">
@@ -31,7 +34,7 @@ export default function Index() {
               Solusi Keluhan Hewan Peliharan Anda
             </div>
             <div className="pl-2">
-              <div className="border border-[#FF834F] p-3 rounded-full cursor-pointer text-[#FF834F] hover:bg-[#FF834F] hover:text-white">
+              <div className="border border-[#FF834F] p-3 rounded-full cursor-pointer text-[#FF834F] hover:bg-[#FF834F] hover:text-white" onClick={() => navigate("/login")}>
                 Daftar Sekarang &gt;&gt;
               </div>
             </div>
@@ -42,18 +45,18 @@ export default function Index() {
             className="w-[650px] hidden md:flex"
           />
         </div>
-        <div className="absolute bottom-10 left-10 flex items-center space-x-7">
+        <div className="absolute bottom-5 left-5 flex items-center space-x-4">
           <div className="space-x-1 flex items-center">
-            <BsWhatsapp className="text-xl" />
-            <div>909090909090</div>
+            <BsWhatsapp className="text-lg" />
+            <div className="text-sm">909090909090</div>
           </div>
           <div className="space-x-1 flex items-center">
-            <BsTiktok className="text-xl" />
-            <div>abcdefg</div>
+            <BsTiktok className="text-lg" />
+            <div className="text-sm">abcdefg</div>
           </div>
           <div className="space-x-1 flex items-center">
-            <FaMapMarkedAlt className="text-xl" />
-            <div>Jln 123</div>
+            <FaMapMarkedAlt className="text-lg" />
+            <div className="text-sm">Jln 123</div>
           </div>
         </div>
       </section>

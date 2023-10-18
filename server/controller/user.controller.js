@@ -26,8 +26,9 @@ module.exports = {
             }
 
             // create new user
+            const image = `uploads/${username[0]}.jpg`
             const createData = await User.create({
-                username, password, fullName, email, role,
+                username, password, fullName, email, role, image
             });
             const data = await User.findOne({
                 attributes: { exclude: ['password'] },
@@ -115,36 +116,44 @@ module.exports = {
         }
     },
 
-    tesUpload: async (req, res) => {
+    updatePicture: async (req, res) => {
         try {
-            console.log(req.file)
             const image = req.file.path; // Get the uploaded file path
+            const { id } = req.params;
 
             if (image) {
+                const dataUser = await User.findOne({ where: { id } })
+                if (!dataUser) {
+                    return response({
+                        res, statusCode: 404, message: 'User ini tidak ditemukan!', data: req.body, type: 'ERROR', name: 'updatePicture'
+                    });
+                }
                 // Save the user and file path to the database
-                const data = await User.create({ username: 'tes', password: 'tes', image }).catch(err => res.send(err));
+                await User.update({ image }, { where: { id } }).catch(err => res.send(err));
+
+                const data = await User.findOne({ where: { id } })
                 return response({
-                    res, statusCode: 200, message: 'Berhasil', data, type: 'SUCCESS', name: 'tesUpload'
+                    res, statusCode: 200, message: 'Berhasil', data, type: 'SUCCESS', name: 'updatePicture'
                 });
             }
             return res.send('gagal')
 
         } catch (error) {
             return response({
-                res, statusCode: 500, message: 'Error tesUpload', data: error.stack.split('\n'), type: 'ERROR', name: 'tesUpload'
+                res, statusCode: 500, message: 'Error updatePicture', data: error.stack.split('\n'), type: 'ERROR', name: 'updatePicture'
             });
         }
     },
 
-    tesGetImage: async (req, res, next) => {
+    getPicture: async (req, res) => {
         try {
-            const dataUser = await User.findOne({
-                where: {
-                    id: req.params.id
-                }
-            })
+            const dataUser = await User.findOne({ where: { id: req.params.id } })
+            if (!dataUser || !dataUser.image) {
+                return response({
+                    res, statusCode: 404, message: 'User ini tidak ditemukan!', data: req.body, type: 'ERROR', name: 'updatePicture'
+                });
+            }
 
-            // const filePath = path.resolve(`${dataUser.image}`)
             const filePath = path.join(__dirname, '..', dataUser.image);
             console.log(filePath, 'file path', fs.existsSync(filePath))
             if (fs.existsSync(filePath)) {
@@ -154,7 +163,7 @@ module.exports = {
 
         } catch (error) {
             return response({
-                res, statusCode: 500, message: 'Error tesUpload', data: error.stack.split('\n'), type: 'ERROR', name: 'tesUpload'
+                res, statusCode: 500, message: 'Error getPicture', data: error.stack.split('\n'), type: 'ERROR', name: 'getPicture'
             });
         }
     },

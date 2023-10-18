@@ -4,23 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     const Vet = sequelize.define('vet',
         // define the column of the table
         {
-            address: {
-                type: DataTypes.TEXT, // set column type
-                allowNull: false // set column not null
-            },
             experience: {
                 type: DataTypes.INTEGER, // set column type
                 allowNull: false // set column not null
             },
-            specialist: {
-                type: DataTypes.TEXT, // set column type
-                allowNull: true // set column not null
-            },
-            treatedAnimals: {
-                type: DataTypes.TEXT, // set column type
-                allowNull: true // set column not null
-            },
             operationHours: {
+                type: DataTypes.STRING, // set column type
+                allowNull: true // set column not null
+            },
+            operationDays: {
                 type: DataTypes.STRING, // set column type
                 allowNull: true // set column not null
             }

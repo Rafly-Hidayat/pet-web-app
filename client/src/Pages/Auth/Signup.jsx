@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import InputField from "../../Components/InputField";
 import { Register } from "../../Utils/store";
 
@@ -18,7 +18,7 @@ export default function Signup({ onLogin }) {
     email: "",
   });
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const HandleSignup = Register();
 
   useEffect(() => {
@@ -78,8 +78,7 @@ export default function Signup({ onLogin }) {
   };
 
   if (HandleSignup.isSuccess) {
-    localStorage.setItem("auth", JSON.stringify(HandleSignup.data?.data || {}));
-    navigate("/");
+    onLogin()
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import logo from "../Assets/Image/logo.png";
 import {
@@ -12,6 +12,7 @@ import { useState } from "react";
 
 export default function Navbar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
+  const navigate = useNavigate();
 
   const [isDropdown, setIsDropdown] = useState(false);
 
@@ -19,7 +20,14 @@ export default function Navbar() {
     { label: "Halaman Utama", icon: <RiHome4Line /> },
     { label: "Konsultasi", icon: <RiCustomerService2Line /> },
     { label: "Profil", icon: <RiAccountCircleLine /> },
-    { label: "Keluar", icon: <RiLogoutBoxLine /> },
+    {
+      label: "Keluar",
+      icon: <RiLogoutBoxLine />,
+      action: () => {
+        localStorage.clear();
+        navigate("/");
+      },
+    },
   ];
 
   // const navigate = useNavigate();
@@ -33,7 +41,7 @@ export default function Navbar() {
   // };
 
   return !auth ? (
-    <Navigate to="/index" replace />
+    <Navigate to="/main" replace />
   ) : (
     <div className="h-screen w-screen overflow-auto">
       <div className="w-full h-20 shadow-sm flex justify-between items-center px-5 sm:px-10 inset-0  absolute top-0 backdrop-blur-md bg-white/30">
@@ -56,11 +64,12 @@ export default function Navbar() {
             >
               {menus.map((menu, idx) => (
                 <li
-                  className="flex space-x-2 items-center py-2 px-3 bg-gray-100 hover:bg-gray-200"
+                  className="flex space-x-2 items-center py-2 px-3 bg-gray-100 hover:bg-gray-200 cursor-pointer"
                   key={idx}
+                  onClick={() => menu.action()}
                 >
                   <span className="text-lg">{menu.icon}</span>
-                  <div className="cursor-pointer w-full text-sm block whitespace-no-wrap">
+                  <div className="w-full text-sm block whitespace-no-wrap">
                     {menu.label}
                   </div>
                 </li>

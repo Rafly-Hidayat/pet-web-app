@@ -187,7 +187,7 @@ module.exports = {
             }
 
             const isFinish = status === 'active' ? false : true
-            const data = Schedulled.findAll({
+            const data = await Schedulled.findAll({
                 where: { isFinish, ...condition },
                 include: [
                     {
@@ -198,6 +198,13 @@ module.exports = {
                     {
                         model: Vet,
                         as: 'vet',
+                        include: [
+                            {
+                                model: User,
+                                as: 'user',
+                                attributes: { exclude: ['password'] }
+                            },
+                        ]
                     }
                 ]
             })

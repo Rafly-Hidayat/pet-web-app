@@ -5,7 +5,15 @@ import { router } from "./Router/route";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import "./index.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+      cacheTime: 0,
+      refetchOnWindowFocus: false,
+    }
+  }
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

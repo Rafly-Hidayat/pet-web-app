@@ -33,3 +33,37 @@ export function VetList() {
 
   return { isLoading, isError, isSuccess, error, data };
 }
+
+export function GetPicture(id) {
+  const { isLoading, isError, isSuccess, error, data, refetch } = useQuery({
+    queryKey: ['userPicture', id],
+    queryFn: async () => {
+    console.log(id);
+    const { data } = await axios.get(`user/picture/${id}`, {
+      responseType: 'blob'
+    });
+    return data;
+  }});
+
+  return { isLoading, isError, isSuccess, error, data, refetch };
+}
+
+export function CreateSchedule() {
+  const { isLoading, isError, isSuccess, error, data, mutate } = useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await axios.post("schedule/create", payload);
+      return data;
+    },
+  });
+
+  return { isLoading, isError, isSuccess, error, data, mutate };
+}
+
+export function UserScheduleList(id) {
+  const { isLoading, isError, isSuccess, error, data } = useQuery(['userScheduleList'], async () => {
+    const { data } = await axios.get(`schedule/list/active/user/${id}`);
+    return data;
+  });
+
+  return { isLoading, isError, isSuccess, error, data };
+}

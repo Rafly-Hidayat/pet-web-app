@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
             },
             isFinish: {
                 type: DataTypes.BOOLEAN, // set column type
-                allowNull: true // set column not null
+                defaultValue: false, // set column default value
+                allowNull: false // set column not null
             },
             isCanceled: {
                 type: DataTypes.BOOLEAN, // set column type

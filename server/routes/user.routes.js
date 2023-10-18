@@ -7,7 +7,7 @@ const upload = require('../middleware/multer')
 // Routes
 router.post('/register', validator.register, controller.register)
 router.post('/login', validator.login, controller.login)
-router.get('/media/:id', controller.tesGetImage)
-router.post('/upload', upload.single('file'), controller.tesUpload)
+router.get('/picture/:id', controller.getPicture)
+router.post('/upload/:id', upload.single('file'), controller.updatePicture)
 
 module.exports = router
