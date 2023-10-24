@@ -1,8 +1,7 @@
-const response = require('../utils/response');
-const { models: { User, Vet } } = require('../model/index');
-const Sequelize = require('sequelize');
 const path = require("path");
 const fs = require('fs');
+const response = require('../utils/response');
+const { models: { User } } = require('../model/index');
 
 module.exports = {
 

@@ -111,9 +111,8 @@ export default function ScheduleModal({
   return (
     <>
       <div>
-        <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none">
-          <div className="relative w-[90%] lg:w-[50%] h-[85%] overflow-x-hidden overflow-y-auto rounded-lg">
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full  bg-white outline-none focus:outline-none">
+        <div className="justify-center items-center flex fixed inset-0 z-50">
+            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-[90%] lg:w-[50%] h-[85%] overflow-x-hidden overflow-y-auto bg-white outline-none focus:outline-none">
               <div className="flex items-center justify-between pl-5 p-3 border-b border-solid bg-[#FF834F] border-slate-200 rounded-t-lg  text-white">
                 <div className="capitalize font-semibold">
                   Jadwalkan Kunjungan Langsung
@@ -183,7 +182,6 @@ export default function ScheduleModal({
                 </div>
               </div>
             </div>
-          </div>
         </div>
         <div className="opacity-25 absolute inset-0 z-20 bg-black" />
       </div>

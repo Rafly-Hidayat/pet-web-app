@@ -1,9 +1,9 @@
 import { RiArrowDropRightLine } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router-dom";
-import InputField from "../../Components/InputField";
+import InputField from "../../../Components/InputField";
 import { useEffect, useState } from "react";
-import { VetList, GetPicture } from "../../Utils/store";
-import ScheduleModal from "../../Components/ScheduleModal";
+import { VetList, GetPicture } from "../../../Utils/store";
+import ScheduleModal from "../../../Components/ScheduleModal";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export default function Search() {
 
   return (
     <>
-      <div className="mt-24 mb-4 flex flex-col flex-1 space-y-5 px-4 text-slate-700">
+      <div className="mt-24 mb-4 flex flex-col flex-1 space-y-5 px-4 lg:px-20 text-slate-700">
         <div className="flex items-center text-sm text-slate-700">
           <div
             className="text-slate-400 cursor-pointer"
@@ -109,6 +109,8 @@ export default function Search() {
                         setOperationDays(vet.operationDays);
                         setOperationhours(vet.operationHours);
                         setVetId(vet.id);
+                      } else {
+                        navigate("/chat", { state: { dataVet: vet } })
                       }
                     }}
                   >

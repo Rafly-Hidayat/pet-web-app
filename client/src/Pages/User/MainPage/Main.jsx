@@ -1,10 +1,10 @@
-import chatVet from "../../Assets/Image/chatVet.png";
-import scheduleVet from "../../Assets/Image/scheduleVet.png";
+import chatVet from "../../../Assets/Image/chatVet.png";
+import scheduleVet from "../../../Assets/Image/scheduleVet.png";
 import { RiArrowDropRightLine } from "react-icons/ri";
 import { GiDogBowl } from "react-icons/gi";
 import { AiOutlineClockCircle } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import { UserScheduleList } from "../../Utils/store";
+import { Navigate, useNavigate } from "react-router-dom";
+import { UserScheduleList } from "../../../Utils/store";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -12,9 +12,11 @@ export default function Main() {
 
   const { isSuccess, data, isError } = UserScheduleList(auth.id);
 
-  return (
+  return auth?.role === 'vet' ? (
+    <Navigate to="/vet" replace />
+  ) : (
     <div className="scroll-smooth overflow-scroll flex-1 bg-[#f8f9fb] mt-24 flex flex-col space-y-5">
-      <div className="flex flex-col space-y-5 bg-white pb-10">
+      <div className="flex flex-col space-y-5 bg-white pb-10 lg:px-20">
         <div
           className="h-40 p-2 mx-4 bg-[#eef4fe] border-2 border-[#9ab9ce] flex items-center rounded-lg shadow-md cursor-pointer"
           onClick={() =>
@@ -53,7 +55,7 @@ export default function Main() {
       </div>
 
       <div className="space-y-2 pb-4">
-        <div className="bg-white text-slate-700 p-4">
+        <div className="bg-white text-slate-700 p-4 lg:px-20">
           <div className="capitalize">Janji Temu yang akan datang </div>
           {isSuccess && (
             <div className="py-5 space-y-4">

@@ -41,7 +41,7 @@ export default function Navbar() {
   // };
 
   return !auth ? (
-    <Navigate to="/main" replace />
+    <Navigate to="/welcome" replace />
   ) : (
     <div className="h-screen w-screen overflow-auto">
       <div className="w-full h-20 shadow-sm flex justify-between items-center px-5 sm:px-10 inset-0  absolute top-0 backdrop-blur-md bg-white/30">

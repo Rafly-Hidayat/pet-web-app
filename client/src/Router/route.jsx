@@ -1,9 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import LandingPage from "../Pages/LandingPage/Index";
 import Auth from "../Pages/Auth/Index";
-import Main from "../Pages/MainPage/Main.jsx";
-import Search from "../Pages/SearchPage/Search.jsx";
 import Navbar from "../Components/Navbar";
+
+// user
+import Main from "../Pages/User/MainPage/Main.jsx";
+import Search from "../Pages/User/SearchPage/Search.jsx";
+import Chat from "../Pages/User/ChatPage/Chat.jsx";
+
+// vet
+import Vet from "../Pages/Vet/MainPage/Main.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -17,11 +23,19 @@ export const router = createBrowserRouter([
       {
         path: "/search",
         element: <Search />
+      },
+      {
+        path: "/chat",
+        element: <Chat />
+      },
+      {
+        path: "/vet",
+        element: <Vet />
       }
     ]
   },
   {
-    path: "/main",
+    path: "/welcome",
     element: <LandingPage />
   },
   {
