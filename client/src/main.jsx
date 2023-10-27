@@ -11,8 +11,9 @@ const queryClient = new QueryClient({
       staleTime: 0,
       cacheTime: 0,
       refetchOnWindowFocus: false,
-    }
-  }
+      retry: false,
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(

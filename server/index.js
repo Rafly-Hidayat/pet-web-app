@@ -69,6 +69,17 @@ app.use(cors(corsOptions));
                     fullName: 'Drh. Margaret danik gultom',
                     role: 'vet',
                 },
+            },
+            {
+                experience: Math.floor(Math.random() * 22),
+                operationHours: '09:00 - 15:00',
+                operationDays: JSON.stringify(["Jum'at"]),
+                user: {
+                    username: 'vet1',
+                    password: 'vet123',
+                    fullName: 'Drh. Vet',
+                    role: 'vet',
+                },
             }
         ]
 

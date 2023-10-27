@@ -61,7 +61,7 @@ export function CreateSchedule() {
 }
 
 export function UserScheduleList(id) {
-  const { isLoading, isError, isSuccess, error, data } = useQuery(["userScheduleList"], async () => {
+  const { isLoading, isError, isSuccess, error, data } = useQuery(["userScheduleList", id], async () => {
     const { data } = await axios.get(`schedule/list/active/user/${id}`);
     return data;
   });
@@ -69,9 +69,9 @@ export function UserScheduleList(id) {
   return { isLoading, isError, isSuccess, error, data };
 }
 
-export function GetDataChat(payload) {
-  const { isLoading, isError, isSuccess, error, data } = useQuery(["GetDataChat"], async () => {
-    const { data } = await axios.get(`chat/get/${payload.userId}/${payload.vetId}`);
+export function GetDataChat({ userId, vetId }) {
+  const { isLoading, isError, isSuccess, error, data } = useQuery(["GetChat", userId, vetId], async () => {
+    const { data } = await axios.get(`chat/get/${userId}/${vetId}`);
     return data;
   });
 
@@ -81,6 +81,15 @@ export function GetDataChat(payload) {
 export function GetRoomIdChat() {
   const { isLoading, isError, isSuccess, error, data } = useQuery(["GetRoomIdChat"], async () => {
     const { data } = await axios.get("chat/room-id");
+    return data;
+  });
+
+  return { isLoading, isError, isSuccess, error, data };
+}
+
+export function VetListChat(id) {
+  const { isLoading, isError, isSuccess, error, data } = useQuery(["VetListChat", id], async () => {
+    const { data } = await axios.get(`chat/vet-list-chat/${id}`);
     return data;
   });
 

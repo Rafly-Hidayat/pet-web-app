@@ -5,12 +5,12 @@ import io from "socket.io-client";
 import moment from "moment";
 
 import InputField from "../../../Components/InputField";
-import { GetDataChat, GetRoomIdChat } from "../../../Utils/store";
+import { GetRoomIdChat } from "../../../Utils/store";
 
 export default function Chat() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { dataVet } = location.state || {};
+  const { dataVet, roomId } = location.state || {};
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const socket = io("http://localhost:8000", {
     transports: ["websocket", "polling"],
@@ -18,30 +18,27 @@ export default function Chat() {
 
   const [inputMessage, setInputMessage] = useState();
   const [chatList, setChatList] = useState([]);
-  const [room, setRoom] = useState("");
+  const [room, setRoom] = useState(roomId);
 
-  const { isSuccess, data, isError, error } = GetDataChat({
-    userId: auth?.id,
-    vetId: dataVet?.id,
-  });
-  const { isSuccess: getRoomSuccess, data: roomId } = GetRoomIdChat();
+  const { isSuccess: getRoomSuccess, data } = GetRoomIdChat();
 
   useEffect(() => {
-    if (isSuccess) {
-      socket.emit("joinRoom", data.data.room);
-      setRoom(data.data.room);
+    if (!room && getRoomSuccess) {
+      socket.emit("joinRoom", data.data);
+      setRoom(data.data);
     }
-    if (error?.response?.status === 404) {
-      if (getRoomSuccess) {
-        socket.emit("joinRoom", roomId.data);
-        setRoom(roomId.data);
-      }
+  }, [getRoomSuccess]);
+
+  useEffect(() => {
+    console.log(room);
+    if (room) {
+      socket.emit("joinRoom", room);
     }
-  }, [isSuccess, isError]);
+  }, []);
 
   useEffect(() => {
     socket.on("update", (data) => {
-      console.log(data);
+      setChatList(data);
     });
     socket.on("message", (messageData) => {
       console.log(messageData);
@@ -80,9 +77,6 @@ export default function Chat() {
     manageScrollDownChat();
   };
 
-  useEffect(() => {
-    console.log(dataVet);
-  }, []);
   return (
     <div className="pt-24 flex flex-col h-full space-y-5 px-4 lg:px-20 overflow-hidden text-slate-700">
       <div className="flex items-center text-sm text-slate-700">
