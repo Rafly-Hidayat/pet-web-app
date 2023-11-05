@@ -1,6 +1,6 @@
-import plugin from 'tailwindcss/plugin'
+import plugin from 'tailwindcss/plugin';
+import daisyui from "daisyui";
 
-/** @type {import('tailwindcss').Config} */
 export default {
   mode: 'jit',
   content: [
@@ -11,6 +11,7 @@ export default {
     extend: {},
   },
   plugins: [
+    daisyui,
     plugin(function ({ addUtilities }) {
       addUtilities({
         '.no-scrollbar::-webkit-scrollbar': {
@@ -23,5 +24,8 @@ export default {
       })
     })
   ],
-}
 
+  daisyui: {
+    themes: ["light"],
+  }
+}

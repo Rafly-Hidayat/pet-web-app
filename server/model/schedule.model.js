@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT, // set column type
                 allowNull: true // set column not null
             },
+            symptom: {
+                type: DataTypes.TEXT, // set column type
+                allowNull: true // set column not null
+            },
         },
         // optional
         {

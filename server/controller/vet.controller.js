@@ -33,10 +33,47 @@ module.exports = {
         }
     },
 
+    getById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const data = await Vet.findOne({
+                where: { id },
+                attributes: { exclude: ['updatedAt', 'createdAt'] },
+                include: {
+                    model: User,
+                    as: 'user',
+                    attributes: { exclude: ['password', 'updatedAt', 'createdAt', 'id'] },
+                }
+            });
+
+            if (!data) {
+                return response({
+                    res, statusCode: 404, message: 'Dokter hewan tidak ditemukan!', data: req.body, type: 'ERROR', name: 'get vet'
+                });
+            }
+
+            const { user, ...rest } = data;
+            delete rest.dataValues.user;
+            const flattenedData = {
+                ...rest.dataValues,
+                ...user.dataValues,
+                operationDays: JSON.parse(rest.dataValues.operationDays)
+            };
+
+            return response({
+                res, statusCode: 200, message: 'Dokter hewan ditemukan', data: flattenedData, type: 'SUCCESS', name: 'get vet'
+            });
+        } catch (error) {
+            return response({
+                res, statusCode: 500, message: 'Error get vet', data: error.stack.split('\n'), type: 'ERROR', name: 'get vet'
+            });
+        }
+    },
+
     update: async (req, res) => {
         try {
             const { id } = req.params
-            const { experience, operationHours, operationDays } = req.body
+            const { experience, operationHours, operationDays, fullName, email, username } = req.body
             const vetData = await Vet.findOne({
                 where: { id }
             })
@@ -48,13 +85,20 @@ module.exports = {
             }
 
             await Vet.update({
-                experience, operationHours, operationDays: JSON.stringify(operationDays),
-            }, {
-                where: { id }
+                experience, operationHours, operationDays: JSON.stringify(operationDays)
+            }, { where: { id } });
+
+            await User.update({ fullName, email, username }, {
+                where: { id: vetData.userId }
             });
 
             const data = await Vet.findOne({
-                where: { id }
+                where: { id },
+                include: {
+                    model: User,
+                    as: 'user',
+                    attributes: { exclude: ['password', 'updatedAt', 'createdAt', 'id'] },
+                }
             })
 
             return response({

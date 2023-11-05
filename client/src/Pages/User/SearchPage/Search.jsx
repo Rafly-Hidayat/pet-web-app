@@ -20,7 +20,7 @@ export default function Search() {
   const [operationhours, setOperationhours] = useState(false);
   const [vetId, setVetId] = useState(null);
 
-  const { isSuccess, data } = VetList();
+  const { isSuccess, data, isLoading } = VetList();
 
   useEffect(() => {
     if (isSuccess) {
@@ -40,10 +40,10 @@ export default function Search() {
 
   return (
     <>
-      <div className="mt-24 mb-4 flex flex-col flex-1 space-y-5 px-4 lg:px-20 text-slate-700">
+      <div className="bg-[#fdc074] pt-24 flex flex-col h-full gap-5 p-4 lg:px-24 text-slate-700 overflow-auto">
         <div className="flex items-center text-sm text-slate-700">
           <div
-            className="text-slate-400 cursor-pointer"
+            className="text-slate-500 cursor-pointer"
             onClick={() => navigate("/")}
           >
             Halaman Utama
@@ -56,8 +56,10 @@ export default function Search() {
           value={inputSearch}
           onChange={handleSearch}
         />
-        <div className="grid grid-flow-dense grid-cols-2 auto-cols-auto gap-4">
-          {filteredVets.map((vet) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {isLoading ? (
+            <span className="loading loading-spinner loading-lg"></span>
+          ) : filteredVets.map((vet) => (
             <VetCard
               key={vet.id}
               vet={vet}

@@ -14,11 +14,11 @@ export default function Index() {
   }, [isSignUpPage]);
 
   return (
-    <div className="bg-[#F6FFFD] w-screen h-screen flex justify-center items-center">
+    <div className="bg-[#fdc074] w-screen h-screen flex justify-center items-center">
       {width <= 1000 ? (
         <div className="w-[80%] flex flex-col items-center space-y-4">
           <div className="text-center">
-            <div className="text-2xl text-slate-700">Petwebcare</div>
+            <div className="text-2xl text-slate-700">Bulu-bulu Animal Clinic</div>
             <div className="text-slate-700">Untuk Hewan Peliharan Anda</div>
           </div>
 
@@ -40,7 +40,7 @@ export default function Index() {
           />
           <div className="flex flex-col items-center justify-center space-y-2 p-10 overflow-auto">
             <div className="text-center">
-              <div className="text-xl text-slate-700">Petwebcare</div>
+              <div className="text-xl text-slate-700">Bulu-bulu Animal Clinic</div>
               <div className="text-slate-700">Untuk Hewan Peliharan Anda</div>
             </div>
 

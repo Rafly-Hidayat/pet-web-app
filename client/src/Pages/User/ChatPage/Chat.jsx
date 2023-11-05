@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { RiArrowDropRightLine, RiSendPlane2Fill } from "react-icons/ri";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import moment from "moment";
+import TextareaAutosize from "react-textarea-autosize";
 
-import InputField from "../../../Components/InputField";
 import { GetRoomIdChat } from "../../../Utils/store";
 
 export default function Chat() {
@@ -16,6 +16,7 @@ export default function Chat() {
     transports: ["websocket", "polling"],
   });
 
+  const elementRef = useRef(null);
   const [inputMessage, setInputMessage] = useState();
   const [chatList, setChatList] = useState([]);
   const [room, setRoom] = useState(roomId);
@@ -34,6 +35,7 @@ export default function Chat() {
     if (room) {
       socket.emit("joinRoom", room);
     }
+    scrollToBottom();
   }, []);
 
   useEffect(() => {
@@ -48,17 +50,14 @@ export default function Chat() {
     });
   });
 
-  const manageScrollDownChat = () => {
-    setTimeout(() => {
-      const el = document.querySelector(".container-items-chat");
-      const maxScrollPosition =
-        (el && el.scrollHeight ? el.scrollHeight : 0) -
-        (el && el.clientHeight ? el.clientHeight : 0);
-      if (el) {
-        el.scrollTop = maxScrollPosition;
-      }
-    }, 200);
-  };
+  useEffect(() => {
+    console.log(chatList, "chatList in useEffect chatList");
+    scrollToBottom();
+  }, [chatList]);
+
+  function scrollToBottom() {
+    elementRef.current.scrollIntoView({ behavior: "smooth" });
+  }
 
   const handleInputMessage = (e) => {
     e.preventDefault();
@@ -74,21 +73,20 @@ export default function Chat() {
       vetId: dataVet?.id,
     });
     setInputMessage("");
-    manageScrollDownChat();
   };
 
   return (
-    <div className="pt-24 flex flex-col h-full space-y-5 px-4 lg:px-20 overflow-hidden text-slate-700">
+    <div className="bg-[#fdc074] pt-24 flex flex-col h-full space-y-5 px-4 lg:px-20 overflow-hidden text-slate-700">
       <div className="flex items-center text-sm text-slate-700">
         <div
-          className="text-slate-400 cursor-pointer"
+          className="text-slate-500 cursor-pointer"
           onClick={() => navigate("/")}
         >
           Halaman Utama
         </div>
         <RiArrowDropRightLine className="text-xl" />
         <div
-          className="text-slate-400 cursor-pointer"
+          className="text-slate-500 cursor-pointer"
           onClick={() =>
             navigate("/search", { state: { pageName: "Telekonsultasi" } })
           }
@@ -96,12 +94,11 @@ export default function Chat() {
           Telekonsultasi
         </div>
         <RiArrowDropRightLine className="text-xl" />
-        <div>Chat</div>
+        <div>{dataVet.fullName}</div>
       </div>
       <hr className="border w-full" />
 
       <div className="flex flex-col flex-1 overflow-y-auto space-y-4 p-2 container-items-chat">
-        {room}
         {chatList.map((chat, idx) => (
           <div
             key={idx}
@@ -110,33 +107,31 @@ export default function Chat() {
             }`}
           >
             <div
-              className={`bg-[#DCF6DD] p-2 rounded-lg text-sm break-all max-w-[90%] ${
-                chat.from === auth.username
-                  ? "rounded-br-none"
-                  : "rounded-bl-none"
+              className={`chat ${
+                chat.from === auth.username ? "chat-end" : "chat-start"
               }`}
             >
-              {chat.message}
-              <div className="flex justify-end text-xs"> {chat.date} </div>
+              <div className={`chat chat-bubble text-black ${chat.from === auth.username ? "bg-[#a6faa7]" : "bg-[#fbf0f0]"}`}>{chat.message}</div>
+              <div className="chat-footer"> {chat.date} </div>
             </div>
           </div>
         ))}
+        <div ref={elementRef} />
       </div>
 
       <div className="bg-slate-200 sticky bottom-3 p-3 rounded-lg">
-        <form
-          onSubmit={handleInputMessage}
-          className="flex space-x-2 items-center"
-        >
-          <InputField
+        <div className="flex space-x-2 items-center">
+          <TextareaAutosize
+            className="w-full text-slate-700 rounded-md border bg-white p-2  placeholder:italic focus:outline-[#598665] border-gray-400"
             placeholder="Pesan..."
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
+            maxRows={3}
           />
-          <button type="submit">
+          <button onClick={handleInputMessage}>
             <RiSendPlane2Fill className="text-4xl" />
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

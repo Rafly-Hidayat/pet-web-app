@@ -7,9 +7,11 @@ import Navbar from "../Components/Navbar";
 import Main from "../Pages/User/MainPage/Main.jsx";
 import Search from "../Pages/User/SearchPage/Search.jsx";
 import Chat from "../Pages/User/ChatPage/Chat.jsx";
+import Profile from "../Pages/User/ProfilePage/Main.jsx";
 
 // vet
-import Vet from "../Pages/Vet/MainPage/Main.jsx";
+import Vet from "../Pages/Vet/Main.jsx";
+import ChatPage from "../Pages/Vet/ChatPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +33,15 @@ export const router = createBrowserRouter([
       {
         path: "/vet",
         element: <Vet />
-      }
+      },
+      {
+        path: "/vet/chat",
+        element: <ChatPage />
+      },
+      {
+        path: "/profile",
+        element: <Profile />
+      },
     ]
   },
   {

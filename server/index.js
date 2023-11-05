@@ -40,7 +40,7 @@ app.use(cors(corsOptions));
     const rowUsers = await User.count();
     if (rowUsers === 0) {
         // create a default user account
-        await User.create({ username: 'tesUsername', password: 'tesPassword', fullName: 'tesFullName', email: 'tesEmail@email.com' });
+        await User.create({ username: 'tesUsername', password: 'tesPassword', fullName: 'tesFullName', email: 'tesEmail@email.com', image: 'uploads/T.jpg' });
     }
 
     // set default vet
@@ -57,6 +57,7 @@ app.use(cors(corsOptions));
                     password: 'Puji321',
                     fullName: 'Drh. Puji hertina ika wahyuni',
                     role: 'vet',
+                    image: 'uploads/profile1.jpg'
                 },
             },
             {
@@ -68,19 +69,9 @@ app.use(cors(corsOptions));
                     password: 'Margaret321',
                     fullName: 'Drh. Margaret danik gultom',
                     role: 'vet',
+                    image: 'uploads/profile2.jpg'
                 },
             },
-            {
-                experience: Math.floor(Math.random() * 22),
-                operationHours: '09:00 - 15:00',
-                operationDays: JSON.stringify(["Jum'at"]),
-                user: {
-                    username: 'vet1',
-                    password: 'vet123',
-                    fullName: 'Drh. Vet',
-                    role: 'vet',
-                },
-            }
         ]
 
         await Vet.bulkCreate(defaultVet, {

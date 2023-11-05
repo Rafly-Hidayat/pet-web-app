@@ -1,7 +1,8 @@
 const path = require("path");
 const fs = require('fs');
 const response = require('../utils/response');
-const { models: { User } } = require('../model/index');
+const { models: { User, Vet } } = require('../model/index');
+const { Op } = require("sequelize");
 
 module.exports = {
 
@@ -53,9 +54,7 @@ module.exports = {
             // get user by username & password
             const data = await User.findOne({
                 attributes: { exclude: ['password'] },
-                where: {
-                    username, password
-                }
+                where: { username, password },
             });
 
             // validate is user doesnt exists
@@ -65,8 +64,20 @@ module.exports = {
                 });
             }
 
+            let dataVet = null;
+            if (data.role === 'vet') {
+                dataVet = await Vet.findOne({
+                    where: { userId: data.id },
+                })
+            }
+
+            const returnedData = {
+                ...data.dataValues,
+                idVet: dataVet?.dataValues?.id,
+            }
+
             return response({
-                res, statusCode: 200, message: 'Login Berhasil', data, type: 'SUCCESS', name: 'login user'
+                res, statusCode: 200, message: 'Login Berhasil', data: returnedData, type: 'SUCCESS', name: 'login user'
             });
         } catch (error) {
             return response({
@@ -75,14 +86,48 @@ module.exports = {
         }
     },
 
+    getById: async (req, res) => {
+        try {
+            const { id } = req.params
+            const dataUser = await User.findOne({
+                where: { id }
+            })
+
+            if (!dataUser) {
+                return response({
+                    res, statusCode: 404, message: 'User ini tidak ditemukan!', data: req.body, type: 'ERROR', name: 'get user'
+                });
+            }
+
+            let data = dataUser;
+            if (dataUser.role === 'vet') {
+                const dataVet = await Vet.findOne({
+                    where: { userId: dataUser.id },
+                    attributes: { exclude: ['updatedAt', 'createdAt', 'id'] },
+                })
+
+                data = {
+                    ...data.dataValues,
+                    ...dataVet.dataValues
+                }
+            }
+
+            return response({
+                res, statusCode: 200, message: 'Berhasil', data, type: 'SUCCESS', name: 'get user'
+            });
+        } catch (error) {
+            return response({
+                res, statusCode: 500, message: 'Error get User', data: error.stack.split('\n'), type: 'ERROR', name: 'get User'
+            });
+        }
+    },
+
     update: async (req, res) => {
         try {
-            const { fullName, email, id } = req.body
+            const { id } = req.params
+            const { experience, operationHours, operationDays, fullName, email, username } = req.body
             const dataUser = await User.findOne({
-                where: {
-                    id,
-                    role: 'user'
-                }
+                where: { id }
             })
 
             if (!dataUser) {
@@ -91,18 +136,17 @@ module.exports = {
                 });
             }
 
-            await User.update({ fullName, email }, {
-                where: {
-                    id: dataUser.id
-                }
+            await User.update({ fullName, email, username }, {
+                where: { id }
             })
+
+            await Vet.update({
+                experience, operationHours, operationDays: JSON.stringify(operationDays)
+            }, { where: { userId: id } });
 
             const data = await User.findOne({
                 attributes: { exclude: ['password'] },
-                where: {
-                    id,
-                    role: 'user'
-                }
+                where: { id }
             })
 
             return response({

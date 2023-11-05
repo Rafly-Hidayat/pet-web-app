@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import logo from "../../Assets/Image/logo.png";
+import logo from "../../Assets/Image/LOGO_BULUBULU.png";
 import InputField from "../../Components/InputField";
 import { Login as LoginApi } from "../../Utils/store";
 
@@ -79,7 +79,7 @@ export default function Login({ onSignUp }) {
       <img src={logo} alt="Logo" className="w-16" />
 
       <div
-        className="w-full rounded-md p-2 border border-[#FF834F] text-[#FF834F] text-center hover:bg-[#FF834F] hover:text-white cursor-pointer"
+        className="w-full rounded-md p-2 border border-[#598665] text-[#598665] text-center hover:bg-[#598665] hover:text-white cursor-pointer"
         onClick={() => onSignUp()}
       >
         Anda pengguna baru? Daftar
@@ -103,19 +103,21 @@ export default function Login({ onSignUp }) {
             onChange={handleChange}
             errorMessage={errorMessage.username}
           />
-          <InputField
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={payloadLogin.password}
-            onChange={handleChange}
-            errorMessage={errorMessage.password}
-          />
+          <div className="relative">
+            <InputField
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={payloadLogin.password}
+              onChange={handleChange}
+              errorMessage={errorMessage.password}
+            />
+          </div>
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-md p-2 my-5 border bg-[#FF834F] border-[#FF834F] text-center text-white"
+          className="w-full rounded-md p-2 my-5 border bg-[#598665] border-[#598665] text-center text-white"
         >
           Masuk
         </button>

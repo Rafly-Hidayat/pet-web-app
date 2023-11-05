@@ -74,7 +74,7 @@ module.exports = {
 
     create: async (req, res) => {
         try {
-            const { date, time, userId, vetId } = req.body;
+            const { date, time, userId, vetId, symptom } = req.body;
 
             const dataUser = await User.findOne({ where: { id: userId, role: 'user' } });
             if (!dataUser) {
@@ -122,7 +122,7 @@ module.exports = {
                 });
             }
 
-            const data = await Schedulled.create({ date, time, userId, vetId, status: 'draft' });
+            const data = await Schedulled.create({ date, time, userId, vetId, symptom, status: 'draft' });
 
             return response({
                 res, statusCode: 200, message: 'Berhasil menambahkan jadwal temu', data, type: 'SUCCESS', name: 'create schedule'
@@ -208,6 +208,12 @@ module.exports = {
                     }
                 ]
             })
+
+            if (!data.length) {
+                return response({
+                    res, statusCode: 404, message: 'Data jadwal temu tidak ditemukan!', data: req.body, type: 'ERROR', name: 'get data schedule'
+                });
+            }
 
             return response({
                 res, statusCode: 200, message: 'Berhasil mengambil data jadwal temu', data, type: 'SUCCESS', name: 'get data schedule'

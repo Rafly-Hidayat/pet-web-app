@@ -69,6 +69,15 @@ export function UserScheduleList(id) {
   return { isLoading, isError, isSuccess, error, data };
 }
 
+export function VetScheduleList(id) {
+  const { isLoading, isError, isSuccess, error, data, refetch} = useQuery(["vetScheduleList", id], async () => {
+    const { data } = await axios.get(`schedule/list/active/vet/${id}`);
+    return data;
+  });
+
+  return { isLoading, isError, isSuccess, error, data, refetch};
+}
+
 export function GetDataChat({ userId, vetId }) {
   const { isLoading, isError, isSuccess, error, data } = useQuery(["GetChat", userId, vetId], async () => {
     const { data } = await axios.get(`chat/get/${userId}/${vetId}`);
@@ -94,4 +103,47 @@ export function VetListChat(id) {
   });
 
   return { isLoading, isError, isSuccess, error, data };
+}
+
+export function ChangeStatusSchedule() {
+  const { isLoading, isError, isSuccess, error, data, mutateAsync } = useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await axios.post("schedule/change-status", payload);
+      return data;
+    },
+  });
+
+  return { isLoading, isError, isSuccess, error, data, mutateAsync };
+}
+
+export function UpdateProfileUser() {
+  const { isLoading, isError, isSuccess, error, data, mutateAsync } = useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await axios.post(`user/update/${payload.id}`, payload);
+      return data;
+    },
+  });
+
+  return { isLoading, isError, isSuccess, error, data, mutateAsync };
+}
+
+export function UpdateProfilePicture() {
+  const { isLoading, isError, isSuccess, error, data, mutateAsync } = useMutation({
+    mutationFn: async (payload) => {
+      console.log(payload)
+      const { data } = await axios.post(`user/update-photo/${payload.get('id')}`, payload);
+      return data;
+    },
+  });
+
+  return { isLoading, isError, isSuccess, error, data, mutateAsync };
+}
+
+export function GetUserData(id) {
+  const { isLoading, isError, isSuccess, error, data} = useQuery(["getUserData", id], async () => {
+    const { data } = await axios.get(`user/get/${id}`);
+    return data;
+  });
+
+  return { isLoading, isError, isSuccess, error, data};
 }

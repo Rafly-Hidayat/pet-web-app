@@ -123,7 +123,7 @@ export default function Signup({ onLogin }) {
 
         <button
           type="submit"
-          className="w-full rounded-md p-2 mt-5 border bg-[#FF834F] border-[#FF834F] text-center text-white"
+          className="w-full rounded-md p-2 mt-5 border bg-[#598665] border-[#598665] text-center text-white"
         >
           Buat Akun
         </button>
@@ -131,7 +131,7 @@ export default function Signup({ onLogin }) {
       <div className="w-full text-slate-700 text-center text-sm flex items-center justify-center space-x-1">
         <div>Sudah memiliki akun?</div>
         <div
-          className="text-[#FF834F] cursor-pointer"
+          className="text-[#598665] cursor-pointer"
           onClick={() => onLogin()}
         >
           Masuk

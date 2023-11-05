@@ -75,7 +75,7 @@ module.exports = {
             const uniqueData = [];
             const seen = new Set();
 
-            for (const item of dataChat) {
+            for (const item of dataChat.reverse()) {
                 // Create a string representation of the item using both userId and vetId
                 const key = `${item.userId}_${item.vetId}`;
 
