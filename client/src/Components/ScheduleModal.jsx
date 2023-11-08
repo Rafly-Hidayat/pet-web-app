@@ -180,7 +180,7 @@ export default function ScheduleModal({
             </div>
             <div className="px-3 py-3 lg:-mt-8 flex justify-end">
               <div
-                className="p-2 px-5 rounded-lg border bg-[#FF834F] text-white cursor-pointer"
+                className={`p-2 px-5 rounded-lg border ${!petMessage || !selectedDate || !selectedTime ? 'bg-slate-400' :  'bg-[#FF834F] text-white cursor-pointer'}`}
                 onClick={handleSchedule}
               >
                 Jadwalkan
