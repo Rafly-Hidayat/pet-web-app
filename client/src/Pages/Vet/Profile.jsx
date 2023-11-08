@@ -156,7 +156,7 @@ export default function Profile() {
 
   return (
     <div className="w-full overflow-auto flex justify-center py-4">
-      <div className="w-[70%] overflow-auto bg-white p-2 rounded-xl flex gap-7">
+      <div className="w-[70%] overflow-auto bg-white p-2 rounded-xl flex ">
         {successGetUser && (
           <GetImage
             userData={userData.data}

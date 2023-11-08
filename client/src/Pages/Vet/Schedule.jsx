@@ -54,7 +54,7 @@ export default function Schedule() {
       case "rejected":
         return "Ditolak";
 
-      case "cenceled":
+      case "canceled":
         return "Dibatalkan";
 
       case "finished":

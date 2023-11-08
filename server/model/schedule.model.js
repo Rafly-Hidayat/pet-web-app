@@ -23,10 +23,6 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: false, // set column default value
                 allowNull: false // set column not null
             },
-            isCanceled: {
-                type: DataTypes.BOOLEAN, // set column type
-                allowNull: true // set column not null
-            },
             message: {
                 type: DataTypes.TEXT, // set column type
                 allowNull: true // set column not null

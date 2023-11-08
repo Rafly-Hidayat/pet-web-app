@@ -7,16 +7,14 @@ import penginapan from "../../../Assets/Image/penginapan.jpg";
 import Vaccination from "../../../Assets/Image/Vaccination.jpg";
 import Shuttles from "../../../Assets/Image/Shuttles.jpg";
 import scheduleVet from "../../../Assets/Image/scheduleVet.png";
-import { GiDogBowl } from "react-icons/gi";
-import { AiOutlineClockCircle } from "react-icons/ai";
+
 import { Navigate, useNavigate } from "react-router-dom";
-import { UserScheduleList } from "../../../Utils/store";
+import Schedule from "./Schedule";
 
 export default function Main() {
   const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
 
-  const { isSuccess, data, isError } = UserScheduleList(auth.id);
 
   return auth?.role === "vet" ? (
     <Navigate to="/vet" replace />
@@ -179,56 +177,7 @@ export default function Main() {
       </div>
 
       <div className="p-4 lg:px-24">
-        <details className="collapse collapse-arrow bg-[#edf3ee] border-2 border-[#c8e1ce]">
-          <summary className="collapse-title text-lg lg:text-xl font-medium">
-            Janji Temu yang akan datang
-          </summary>
-          <div className="collapse-content">
-            {isSuccess && (
-              <div className="space-y-4">
-                {data?.data?.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 items-center lg:space-x-3"
-                  >
-                    <AiOutlineClockCircle className="text-3xl hidden lg:flex" />
-                    <hr className="border w-full lg:hidden" />
-                    <div> {item.vet.user.fullName} </div>
-                    <div>
-                      {item.date} - <span> {item.time} </span>
-                    </div>
-                    <div>
-                      {item.status === "draft" && "Menunggu Persetujuan"}
-                    </div>
-                    <div className="border border-red-400 p-1 px-2 rounded-lg text-red-400 cursor-pointer">
-                      Batalkan
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {isError && (
-              <div className="flex flex-col items-center space-y-2">
-                <div className="flex flex-col items-center">
-                  <GiDogBowl className="text-6xl" />
-                  <div className="text-slate-700">
-                    Anda belum memiliki janji temu
-                  </div>
-                </div>
-                <div
-                  className="p-4 border border-[#FF834F] text-[#FF834F] rounded cursor-pointer hover:bg-[#FF834F] hover:text-white"
-                  onClick={() =>
-                    navigate("/search", {
-                      state: { pageName: "Kunjungan Langsung" },
-                    })
-                  }
-                >
-                  Buat janji temu sekarang
-                </div>
-              </div>
-            )}
-          </div>
-        </details>
+        <Schedule auth={auth} />
       </div>
     </div>
   );

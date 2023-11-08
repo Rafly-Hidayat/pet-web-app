@@ -122,7 +122,7 @@ module.exports = {
                 });
             }
 
-            const data = await Schedulled.create({ date, time, userId, vetId, symptom, status: 'draft' });
+            const data = await Schedulled.create({ date: moment(date).locale('id').format('LL'), time, userId, vetId, symptom, status: 'draft' });
 
             return response({
                 res, statusCode: 200, message: 'Berhasil menambahkan jadwal temu', data, type: 'SUCCESS', name: 'create schedule'
