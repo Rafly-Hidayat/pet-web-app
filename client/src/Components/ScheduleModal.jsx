@@ -50,7 +50,6 @@ export default function ScheduleModal({
   const { mutate, isSuccess, isError } = CreateSchedule();
 
   useEffect(() => {
-    console.log(operationDays, operationHours);
     setTimeAvailable(getInterval(operationHours));
   }, []);
 
@@ -106,7 +105,6 @@ export default function ScheduleModal({
       symptom: petMessage,
     };
 
-    console.log(payload);
     if (Object.values(payload).every((value) => value)) {
       mutate(payload);
     }

@@ -26,17 +26,13 @@ export default function Schedule() {
   } = ChangeStatusSchedule();
 
   useEffect(() => {
-    console.log(data?.data);
-    setListSchedules(data?.data);
-  }, [isSuccess]);
+    if (isSuccess) {
+      setListSchedules(data?.data);
+    }
+  }, [isSuccess, data]);
 
   useEffect(() => {
-    if (changeStatusError) {
-      console.log("Error", changeStatusError);
-    }
-
     if (changeStatusSuccess) {
-      console.log("Success", changeStatusSuccess);
       setModalConfirm(false);
       refetch();
       setListSchedules(data?.data);

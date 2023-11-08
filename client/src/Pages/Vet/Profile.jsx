@@ -42,13 +42,11 @@ export default function Profile() {
   const [listDays, setListDays] = useState([]);
 
   const { isSuccess: successGetUser, data: userData } = GetUserData(auth?.id);
-  const { isSuccess: successUpdateUser, mutateAsync: updateUser } =
-    UpdateProfileUser();
+  const { mutateAsync: updateUser } = UpdateProfileUser();
   const { mutateAsync: updatePicture } = UpdateProfilePicture();
 
   useEffect(() => {
     if (successGetUser) {
-      console.log(userData.data);
       setListDays(
         days.map((day) => {
           const value = userData?.data?.operationDays?.includes(day);
@@ -73,12 +71,6 @@ export default function Profile() {
       });
     }
   }, [successGetUser]);
-
-  useEffect(() => {
-    if (successUpdateUser) {
-      console.log("object updated");
-    }
-  }, [successUpdateUser]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -107,7 +99,7 @@ export default function Profile() {
     updatedList[index].value = !updatedList[index].value;
 
     const isListDays = updatedList.filter((day) => day.value === true);
-    console.log(isListDays, "isListDays");
+
     if (!isListDays.length) {
       setErrorMessage((prev) => {
         return {
@@ -150,7 +142,6 @@ export default function Profile() {
       username,
     };
 
-    console.log(payload);
     await updateUser(payload);
   };
 

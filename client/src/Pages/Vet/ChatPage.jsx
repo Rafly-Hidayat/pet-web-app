@@ -6,6 +6,7 @@ import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { GetRoomIdChat } from "../../Utils/store";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Chat() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Chat() {
   const socket = io("http://localhost:8000", {
     transports: ["websocket", "polling"],
   });
+  const queryClient = useQueryClient();
 
   const elementRef = useRef(null);
   const [inputMessage, setInputMessage] = useState();
@@ -31,7 +33,6 @@ export default function Chat() {
   }, [getRoomSuccess]);
 
   useEffect(() => {
-    console.log(room);
     if (room) {
       socket.emit("joinRoom", room);
     }
@@ -43,7 +44,9 @@ export default function Chat() {
       setChatList(data);
     });
     socket.on("message", (messageData) => {
-      console.log(messageData);
+      if (messageData.vetId === auth.idVet) {
+        queryClient.invalidateQueries(["VetListChat"]);
+      }
       setChatList((prev) => {
         return [...prev, { ...messageData }];
       });
@@ -51,7 +54,6 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    console.log(chatList, "chatList in useEffect chatList");
     scrollToBottom();
   }, [chatList]);
 
@@ -62,7 +64,7 @@ export default function Chat() {
   const handleInputMessage = (e) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
-    console.log("handleInputMessage");
+
     const date = moment().format("l HH:mm");
     socket.emit("message", {
       from: auth?.username,
@@ -76,7 +78,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="pt-24 flex flex-col h-full space-y-5 px-4 lg:px-20 overflow-hidden text-slate-700">
+    <div className="pt-24 bg-[#fdc074] flex flex-col h-full space-y-5 px-4 lg:px-20 overflow-hidden text-slate-700">
       <div className="flex items-center text-sm text-slate-700">
         <RiArrowDropLeftLine
           className="text-4xl cursor-pointer"
@@ -95,14 +97,18 @@ export default function Chat() {
             }`}
           >
             <div
-              className={`p-2 rounded-lg text-sm break-all max-w-[90%] ${
-                chat.from === auth.username
-                  ? "rounded-br-none bg-[#DCF6DD]"
-                  : "rounded-bl-none bg-[#f5f5f5]"
+              className={`chat ${
+                chat.from === auth.username ? "chat-end" : "chat-start"
               }`}
             >
-              <div className="py-1 whitespace-pre-line">{chat.message}</div>
-              <div className="flex justify-end text-xs"> {chat.date} </div>
+              <div
+                className={`chat chat-bubble max-w-none text-black ${
+                  chat.from === auth.username ? "bg-[#a6faa7]" : "bg-[#fbf0f0]"
+                }`}
+              >
+                {chat.message}
+              </div>
+              <div className="chat-footer"> {chat.date} </div>
             </div>
           </div>
         ))}

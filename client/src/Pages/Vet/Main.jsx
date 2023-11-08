@@ -9,26 +9,27 @@ export default function Main() {
 
   const getTab = () => {
     switch (tab) {
-      case 'chat':
-        return <ListChat />
-    
-      case 'schedule':
-        return <Schedule />
-    
-      case 'profile':
-        return <Profile />
-    
+      case "chat":
+        return <ListChat />;
+
+      case "schedule":
+        return <Schedule />;
+
+      case "profile":
+        return <Profile />;
+
       default:
         break;
     }
-  }
+  };
 
   return (
     <div className="bg-[#fdc074] pt-20 flex flex-col h-full px-4 lg:px-20 overflow-auto">
       <div className="bg-[#fdc074] sticky top-0 w-full flex items-center">
         <div
           className={`w-[50%] text-center p-3 ${
-            tab === "chat" && "border-b border-[#598665] text-[#598665] font-semibold"
+            tab === "chat" &&
+            "border-b border-[#598665] text-[#598665] font-semibold"
           } cursor-pointer lg:text-lg hover:text-[#598665]`}
           onClick={() => setTab("chat")}
         >
@@ -36,7 +37,8 @@ export default function Main() {
         </div>
         <div
           className={`w-[50%] text-center p-3 ${
-            tab === "schedule" && "border-b border-[#598665] text-[#598665] font-semibold"
+            tab === "schedule" &&
+            "border-b border-[#598665] text-[#598665] font-semibold"
           } cursor-pointer lg:text-lg hover:text-[#598665]`}
           onClick={() => setTab("schedule")}
         >
@@ -44,7 +46,8 @@ export default function Main() {
         </div>
         <div
           className={`w-[50%] text-center p-3 ${
-            tab === "profile" && "border-b border-[#598665] text-[#598665] font-semibold"
+            tab === "profile" &&
+            "border-b border-[#598665] text-[#598665] font-semibold"
           } cursor-pointer lg:text-lg hover:text-[#598665]`}
           onClick={() => setTab("profile")}
         >

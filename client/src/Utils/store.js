@@ -38,7 +38,7 @@ export function GetPicture(id) {
   const { isLoading, isError, isSuccess, error, data, refetch } = useQuery({
     queryKey: ["userPicture", id],
     queryFn: async () => {
-      console.log(id);
+
       const { data } = await axios.get(`user/picture/${id}`, {
         responseType: "blob"
       });
@@ -97,12 +97,12 @@ export function GetRoomIdChat() {
 }
 
 export function VetListChat(id) {
-  const { isLoading, isError, isSuccess, error, data } = useQuery(["VetListChat", id], async () => {
+  const { isLoading, isError, isSuccess, error, data, refetch } = useQuery(["VetListChat", id], async () => {
     const { data } = await axios.get(`chat/vet-list-chat/${id}`);
     return data;
   });
 
-  return { isLoading, isError, isSuccess, error, data };
+  return { isLoading, isError, isSuccess, error, data, refetch };
 }
 
 export function ChangeStatusSchedule() {
@@ -114,7 +114,7 @@ export function ChangeStatusSchedule() {
       return data;
     },
     onSuccess: () => {
-      console.log('ChangeStatusSchedule succeeded');
+
       queryClient.invalidateQueries(['vetScheduleList'])
       queryClient.invalidateQueries(['userScheduleList'])
     }
@@ -137,7 +137,7 @@ export function UpdateProfileUser() {
 export function UpdateProfilePicture() {
   const { isLoading, isError, isSuccess, error, data, mutateAsync } = useMutation({
     mutationFn: async (payload) => {
-      console.log(payload)
+
       const { data } = await axios.post(`user/update-photo/${payload.get('id')}`, payload);
       return data;
     },
@@ -153,4 +153,15 @@ export function GetUserData(id) {
   });
 
   return { isLoading, isError, isSuccess, error, data };
+}
+
+export function Logout() {
+  const { isLoading, isError, isSuccess, error, data, mutateAsync } = useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await axios.post('user/logout', payload);
+      return data;
+    },
+  });
+
+  return { isLoading, isError, isSuccess, error, data, mutateAsync };
 }

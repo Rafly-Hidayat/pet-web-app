@@ -8,37 +8,53 @@ import {
   RiLogoutBoxLine,
 } from "react-icons/ri";
 import { useEffect } from "react";
+import { Logout } from "../Utils/store";
 
 export default function Navbar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const navigate = useNavigate();
 
+  const { isSuccess, mutateAsync } = Logout();
   const menus = [
-    { label: "Halaman Utama", icon: <RiHome4Line />, action: () => navigate('/') },
-    { label: "Profil", icon: <RiAccountCircleLine />, action: () => navigate('/profile') },
+    {
+      label: "Halaman Utama",
+      icon: <RiHome4Line />,
+      action: () => navigate("/"),
+    },
+    {
+      label: "Profil",
+      icon: <RiAccountCircleLine />,
+      action: () => navigate("/profile"),
+    },
     {
       label: "Keluar",
       icon: <RiLogoutBoxLine />,
-      action: () => {
-        localStorage.clear();
-        navigate("/");
+      action: async () => {
+        await mutateAsync({ username: auth.username });
       },
     },
   ];
 
   useEffect(() => {
+    if (isSuccess) {
+      localStorage.clear();
+      navigate("/");
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
     function handleClickOutside() {
-      document.querySelectorAll('.dropdown').forEach(function(dropdown) {
+      document.querySelectorAll(".dropdown").forEach(function (dropdown) {
         dropdown.open = false;
       });
     }
 
     // Add the event listener when the component mounts
-    window.addEventListener('click', handleClickOutside);
+    window.addEventListener("click", handleClickOutside);
 
     // Remove the event listener when the component unmounts
     return () => {
-      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -65,13 +81,10 @@ export default function Navbar() {
         </div>
         {/* menu dropdown */}
         <details className="dropdown dropdown-end">
-          <summary  className="btn btn-circle btn-ghost btn-xl">
+          <summary className="btn btn-circle btn-ghost btn-xl">
             <RiMenuLine className="cursor-pointer" />
           </summary>
-          <ul
-            
-            className="menu dropdown-content z-[1] shadow bg-base-100 rounded-box w-52 mt-4"
-          >
+          <ul className="menu dropdown-content z-[1] shadow bg-base-100 rounded-box w-52 mt-4">
             {menus.map((menu, idx) => (
               <li
                 className="hover:bg-gray-200 cursor-pointer"

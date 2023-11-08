@@ -26,10 +26,6 @@ export default function Index() {
           id="1"
           className="lg:w-[50%] h-full flex flex-col items-center md:items-start md:pl-10 justify-center gap-2"
         >
-          {/* <div
-              className="w-[80%] h-[250px] bg-cover bg-center sm:hidden"
-              style={{ backgroundImage: `url(${landingPage1})` }}
-            /> */}
           <div
             className="text-5xl md:text-7xl text-center md:text-start capitalize text-[#598665]"
             style={{ fontFamily: "Lobster" }}

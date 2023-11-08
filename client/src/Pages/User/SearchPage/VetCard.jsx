@@ -17,22 +17,19 @@ export default function VetCard({
 
   const [roomId, setRoomId] = useState();
 
-  const { isSuccess: successGetPicture, data: picture, isLoading: pictureLoading } = GetPicture(
-    vet.userId
-  );
-  const { isSuccess, data, isError, error } = GetDataChat({
+  const {
+    isSuccess: successGetPicture,
+    data: picture,
+    isLoading: pictureLoading,
+  } = GetPicture(vet.userId);
+  const { isSuccess, data, isError } = GetDataChat({
     userId: auth.id,
     vetId,
   });
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(data);
-      console.log(vetId, auth.id, data?.data?.roomId);
       setRoomId(data?.data?.roomId);
-    }
-    if (isError) {
-      console.log(error);
     }
   }, [isSuccess, isError]);
 

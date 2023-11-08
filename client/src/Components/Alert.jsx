@@ -4,7 +4,6 @@ import { ImCross } from "react-icons/im";
 
 export default function Alert({ desc, type, close }) {
   useEffect(() => {
-    console.log(type)
     setTimeout(() => {
       close(true);
     }, 1000);

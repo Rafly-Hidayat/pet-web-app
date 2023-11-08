@@ -60,7 +60,13 @@ module.exports = {
             // validate is user doesnt exists
             if (!data) {
                 return response({
-                    res, statusCode: 404, message: 'Username atau Password salah!', data: req.body, type: 'ERROR', name: 'login user'
+                    res, statusCode: 401, message: 'Username atau Password salah!', data: req.body, type: 'ERROR', name: 'login user'
+                });
+            }
+
+            if (data.isLogin) {
+                return response({
+                    res, statusCode: 401, message: 'User Sedang Digunakan!', data: req.body, type: 'ERROR', name: 'login user'
                 });
             }
 
@@ -76,12 +82,39 @@ module.exports = {
                 idVet: dataVet?.dataValues?.id,
             }
 
+            await User.update({ isLogin: true }, { where: { id: data.id } })
+
             return response({
                 res, statusCode: 200, message: 'Login Berhasil', data: returnedData, type: 'SUCCESS', name: 'login user'
             });
         } catch (error) {
             return response({
                 res, statusCode: 500, message: 'Error Login', data: error.stack.split('\n'), type: 'ERROR', name: 'login user'
+            });
+        }
+    },
+
+    logout: async (req, res) => {
+        try {
+            const { username } = req.body;
+
+            const dataUser = await User.findOne({
+                where: { username }
+            })
+
+            if (!dataUser) {
+                return response({
+                    res, statusCode: 404, message: 'User ini tidak ditemukan!', data: req.body, type: 'ERROR', name: 'logout user'
+                });
+            }
+            await User.update({ isLogin: false }, { where: { id: dataUser.id } })
+
+            return response({
+                res, statusCode: 200, message: 'Logout Berhasil', data: dataUser, type: 'SUCCESS', name: 'logout user'
+            });
+        } catch (error) {
+            return response({
+                res, statusCode: 500, message: 'Error Login', data: error.stack.split('\n'), type: 'ERROR', name: 'logout user'
             });
         }
     },
@@ -198,7 +231,7 @@ module.exports = {
             }
 
             const filePath = path.join(__dirname, '..', dataUser.image);
-            console.log(filePath, 'file path', fs.existsSync(filePath))
+            
             if (fs.existsSync(filePath)) {
                 return res.sendFile(filePath)
             }

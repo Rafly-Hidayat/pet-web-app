@@ -1,36 +1,35 @@
 import { useEffect, useState } from "react";
 import { GetPicture, VetListChat } from "../../Utils/store";
 import { useNavigate } from "react-router-dom";
+import io from "socket.io-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ListChat() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const navigate = useNavigate();
+  const socket = io("http://localhost:8000", {
+    transports: ["websocket", "polling"],
+  });
+  const queryClient = useQueryClient();
 
   const [listChat, setListChat] = useState([]);
 
-  const { isSuccess, data } = VetListChat(auth.idVet);
+  const { isSuccess, data, refetch } = VetListChat(auth.idVet);
+
+  useEffect(() => {
+    socket.on("vetMessage", (messageData) => {
+      if (messageData.vetId === auth.idVet) {
+        queryClient.invalidateQueries(["VetListChat"]);
+        refetch();
+      }
+    });
+  });
 
   useEffect(() => {
     if (isSuccess) {
       setListChat(data.data);
-      console.log(data.data);
     }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    // Function to clear localStorage
-    const clearLocalStorage = () => {
-      localStorage.clear();
-    };
-
-    // Add event listener for beforeunload
-    window.addEventListener("beforeunload", clearLocalStorage);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("beforeunload", clearLocalStorage);
-    };
-  }, []);
+  }, [isSuccess, data]);
 
   return (
     <div className="h-full py-4">
@@ -56,7 +55,9 @@ export default function ListChat() {
 }
 
 function ChatComponent({ chat, handleClick }) {
-  const { isSuccess: successGetPicture, data: picture } = GetPicture(chat?.user?.id);
+  const { isSuccess: successGetPicture, data: picture } = GetPicture(
+    chat?.user?.id
+  );
   return (
     <div
       className="p-2 pr-6 lg:pr-10 rounded-full flex items-center space-x-4 cursor-pointer bg-[#edf3ee] border-2 border-[#c8e1ce]"
@@ -76,10 +77,10 @@ function ChatComponent({ chat, handleClick }) {
           <div className="font-semibold lg:text-lg">{chat.user.fullName}</div>
           <div className="">{chat.message}</div>
         </div>
-          <div className="flex flex-col justify-end items-end">
-            <div>{chat.date.split(' ')[0]}</div>
-            <div>{chat.date.split(' ')[1]}</div>
-          </div>
+        <div className="flex flex-col justify-end items-end">
+          <div>{chat.date.split(" ")[0]}</div>
+          <div>{chat.date.split(" ")[1]}</div>
+        </div>
       </div>
     </div>
   );

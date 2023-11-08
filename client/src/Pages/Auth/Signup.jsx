@@ -78,7 +78,7 @@ export default function Signup({ onLogin }) {
   };
 
   if (HandleSignup.isSuccess) {
-    onLogin()
+    onLogin();
   }
 
   return (

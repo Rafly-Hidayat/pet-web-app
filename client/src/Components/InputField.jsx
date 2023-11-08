@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 
 export default function InputField({
@@ -25,10 +25,6 @@ export default function InputField({
       return "";
     }
   };
-
-  useEffect(() => {
-    console.log(getType())
-  }, [])
 
   return (
     <div className="w-full flex flex-col">

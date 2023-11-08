@@ -31,7 +31,6 @@ export default function Chat() {
   }, [getRoomSuccess]);
 
   useEffect(() => {
-    console.log(room);
     if (room) {
       socket.emit("joinRoom", room);
     }
@@ -43,7 +42,6 @@ export default function Chat() {
       setChatList(data);
     });
     socket.on("message", (messageData) => {
-      console.log(messageData);
       setChatList((prev) => {
         return [...prev, { ...messageData }];
       });
@@ -51,7 +49,6 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    console.log(chatList, "chatList in useEffect chatList");
     scrollToBottom();
   }, [chatList]);
 
@@ -62,7 +59,7 @@ export default function Chat() {
   const handleInputMessage = (e) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
-    console.log("handleInputMessage");
+
     const date = moment().format("l HH:mm");
     socket.emit("message", {
       from: auth?.username,
@@ -111,7 +108,13 @@ export default function Chat() {
                 chat.from === auth.username ? "chat-end" : "chat-start"
               }`}
             >
-              <div className={`chat chat-bubble text-black ${chat.from === auth.username ? "bg-[#a6faa7]" : "bg-[#fbf0f0]"}`}>{chat.message}</div>
+              <div
+                className={`chat chat-bubble max-w-none text-black ${
+                  chat.from === auth.username ? "bg-[#a6faa7]" : "bg-[#fbf0f0]"
+                }`}
+              >
+                {chat.message}
+              </div>
               <div className="chat-footer"> {chat.date} </div>
             </div>
           </div>

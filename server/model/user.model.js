@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false, // set column not null
                 defaultValue: 'user', // set column default value
             },
+            isLogin: {
+                type: DataTypes.BOOLEAN, // set column type
+                allowNull: false, // set column not null
+                defaultValue: false, // set column default value
+            },
         },
         // optional
         {

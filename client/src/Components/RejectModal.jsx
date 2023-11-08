@@ -10,7 +10,9 @@ export default function RejectModal({ reject, closeModal }) {
         <div className="relative w-[50%]">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-center justify-between pl-5 p-3 border-b border-solid bg-[#fdc074] border-slate-200 rounded-t-lg">
-              <div className="capitalize font-semibold">Keterangan Menolak Jadwal</div>
+              <div className="capitalize font-semibold">
+                Keterangan Menolak Jadwal
+              </div>
               <ImCross
                 className="cursor-pointer"
                 onClick={() => closeModal()}

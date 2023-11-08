@@ -24,7 +24,6 @@ export default function Search() {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(data.data);
       setVets(data.data);
       setFilteredVets(data.data);
     }
@@ -59,24 +58,26 @@ export default function Search() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {isLoading ? (
             <span className="loading loading-spinner loading-lg"></span>
-          ) : filteredVets.map((vet) => (
-            <VetCard
-              key={vet.id}
-              vet={vet}
-              vetId={vet.id}
-              auth={auth}
-              setVetId={(val) => setVetId(val)}
-              setModal={(val) => setModal(val)}
-              setOperationDays={(val) => setOperationDays(val)}
-              setOperationhours={(val) => setOperationhours(val)}
-              pageName={pageName}
-              btnLabel={
-                pageName === "Telekonsultasi"
-                  ? "Mulai Konsultasi Online"
-                  : "Buat Jadwal"
-              }
-            />
-          ))}
+          ) : (
+            filteredVets.map((vet) => (
+              <VetCard
+                key={vet.id}
+                vet={vet}
+                vetId={vet.id}
+                auth={auth}
+                setVetId={(val) => setVetId(val)}
+                setModal={(val) => setModal(val)}
+                setOperationDays={(val) => setOperationDays(val)}
+                setOperationhours={(val) => setOperationhours(val)}
+                pageName={pageName}
+                btnLabel={
+                  pageName === "Telekonsultasi"
+                    ? "Mulai Konsultasi Online"
+                    : "Buat Jadwal"
+                }
+              />
+            ))
+          )}
         </div>
       </div>
       {modal && (

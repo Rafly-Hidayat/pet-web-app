@@ -14,7 +14,6 @@ export default function Schedule({ auth }) {
     ChangeStatusSchedule();
 
   const [tab, setTab] = useState("waiting");
-  const [copyTab, setCopyTab] = useState("waiting");
   const [message, setMessage] = useState("");
   const [modalConfirm, setModalConfirm] = useState(false);
   const [listSchedules, setListSchedules] = useState([]);
@@ -22,12 +21,9 @@ export default function Schedule({ auth }) {
 
   useEffect(() => {
     if (isSuccess) {
-      const filteredSchedules = data?.data?.filter(
-        (schedule) => schedule.status === "draft"
-      );
-      setListSchedules(filteredSchedules);
+      filterData();
     }
-  }, [isSuccess]);
+  }, [isSuccess, data]);
 
   useEffect(() => {
     setListSchedules(data?.data);
@@ -36,11 +32,7 @@ export default function Schedule({ auth }) {
     }
     if (changeStatusSuccess) {
       fetch();
-      setCopyTab(tab);
-      tab === "waiting" ? setTab("coming") : setTab("waiting");
-      console.log(data?.data);
       setModalConfirm(false);
-      //   filterData();
     }
   }, [changeStatusSuccess]);
 
@@ -49,20 +41,10 @@ export default function Schedule({ auth }) {
       filterData();
     }
   }, [tab]);
-  useEffect(() => {
-    console.log("object 1", tab, copyTab);
-    if (!modalConfirm) {
-      console.log("object", tab, copyTab);
-      setTimeout(() => {
-        setTab(copyTab);
-        filterData();
-      }, 1000);
-    }
-  }, [modalConfirm]);
 
   const filterData = () => {
     let filteredSchedules = null;
-    console.log(data?.data);
+
     switch (tab) {
       case "waiting":
         filteredSchedules = data?.data?.filter(

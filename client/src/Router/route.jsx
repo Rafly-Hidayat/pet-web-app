@@ -20,33 +20,33 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Main />
+        element: <Main />,
       },
       {
         path: "/search",
-        element: <Search />
+        element: <Search />,
       },
       {
         path: "/chat",
-        element: <Chat />
+        element: <Chat />,
       },
       {
         path: "/vet",
-        element: <Vet />
+        element: <Vet />,
       },
       {
         path: "/vet/chat",
-        element: <ChatPage />
+        element: <ChatPage />,
       },
       {
         path: "/profile",
-        element: <Profile />
+        element: <Profile />,
       },
-    ]
+    ],
   },
   {
     path: "/welcome",
-    element: <LandingPage />
+    element: <LandingPage />,
   },
   {
     path: "/login",

@@ -83,7 +83,7 @@ app.use(cors(corsOptions));
 
 const rooms = new Map();
 io.on('connection', (socket) => {
-    console.log('A user connected');
+    console.info('A user connected');
 
     socket.on('joinRoom', async (room) => {
         // Create the room in the Map if it doesn't exist
@@ -111,16 +111,16 @@ io.on('connection', (socket) => {
             roomMessages.push({ from, message, date });
 
             await Chat.create({ roomId: room, from, message, date, userId, vetId })
-            io.to(room).emit('message', { from, room, message, date });
+            io.emit('vetMessage', { from, room, message, date, vetId })
+            io.to(room).emit('message', { from, room, message, date, vetId });
         }
     });
 
     socket.on('disconnect', (reason) => {
-        console.log('A user disconnected', reason);
+        console.info('A user disconnected', reason);
     });
 });
 
-console.log(path.join(__dirname, ''))
 // import routes
 const userRoutes = require('./routes/user.routes');
 const vetRoutes = require('./routes/vet.routes');
@@ -133,4 +133,4 @@ app.use('/vet', vetRoutes);
 app.use('/schedule', scheduleRoutes);
 app.use('/chat', chatRoutes);
 
-server.listen(port, () => { console.log(`Server is running on port ${port}`) }); // listen port
+server.listen(port, () => { console.info(`Server is running on port ${port}`) }); // listen port

@@ -15,7 +15,6 @@ export default function Main() {
   const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
 
-
   return auth?.role === "vet" ? (
     <Navigate to="/vet" replace />
   ) : (

@@ -11,5 +11,6 @@ router.get('/get/:id', controller.getById)
 router.get('/picture/:id', controller.getPicture)
 router.post('/update-photo/:id', upload.single('picture'), controller.updatePicture)
 router.post('/update/:id', controller.update)
+router.post('/logout', controller.logout)
 
 module.exports = router
