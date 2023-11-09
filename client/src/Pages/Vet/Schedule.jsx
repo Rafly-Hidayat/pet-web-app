@@ -7,7 +7,7 @@ import {
 import ConfirmModal from "../../Components/ConfirmModal";
 import RejectModal from "../../Components/RejectModal";
 
-export default function Schedule() {
+export default function Schedule({ search }) {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
 
   const [listSchedules, setListSchedules] = useState([]);
@@ -30,6 +30,15 @@ export default function Schedule() {
       setListSchedules(data?.data);
     }
   }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const filterSchedule = data.data.filter((schedule) =>
+        schedule.user.fullName.toLowerCase().includes(search)
+      );
+      setListSchedules(filterSchedule);
+    }
+  }, [search]);
 
   useEffect(() => {
     if (changeStatusSuccess) {

@@ -3,17 +3,19 @@ import { useState } from "react";
 import ListChat from "./ListChat";
 import Schedule from "./Schedule";
 import Profile from "./Profile";
+import InputField from "../../Components/InputField";
 
 export default function Main() {
   const [tab, setTab] = useState("chat");
+  const [inputSearch, setInputSearch] = useState("");
 
   const getTab = () => {
     switch (tab) {
       case "chat":
-        return <ListChat />;
+        return <ListChat search={inputSearch.toLocaleLowerCase()} />;
 
       case "schedule":
-        return <Schedule />;
+        return <Schedule search={inputSearch.toLocaleLowerCase()} />;
 
       case "profile":
         return <Profile />;
@@ -24,7 +26,12 @@ export default function Main() {
   };
 
   return (
-    <div className="bg-[#fdc074] pt-20 flex flex-col h-full px-4 lg:px-20 overflow-auto">
+    <div className="bg-[#fdc074] pt-24 flex flex-col h-full px-4 lg:px-20 overflow-auto">
+      <InputField
+        placeholder="Cari Nama Pasien"
+        value={inputSearch}
+        onChange={(e) => setInputSearch(e.target.value)}
+      />
       <div className="bg-[#fdc074] sticky top-0 w-full flex items-center">
         <div
           className={`w-[50%] text-center p-3 ${

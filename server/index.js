@@ -1,9 +1,9 @@
 // Import NPM
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const http = require('http');
 const socketIo = require('socket.io');
+const session = require('express-session');
 
 // Import file
 const { models: { DataUser, User, Vet, Chat }, sequelize } = require('./model/index');
@@ -20,6 +20,41 @@ const io = socketIo(server, {
     transports: ["polling", "websocket"],
     allowEIO3: true,
     maxHttpBufferSize: 1e8
+});
+
+
+// session
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+}));
+
+// Middleware to update last activity timestamp and check for auto-logout
+app.use(async (req, res, next) => {
+    console.log('sessionnnn oii  11', req.session)
+    if (req.session.user) {
+        console.log('sessionnnn oii  22')
+
+        const maxInactivity = 0.1 * 60 * 1000; // 30 minutes in milliseconds
+        const elapsedTime = Date.now() - req.session.user.lastActivity;
+
+        if (elapsedTime > maxInactivity && req.session.user.id) {
+            console.log('sessionnnn oii  33')
+            // Log out the user by updating isLogin to false in the database
+            try {
+                await User.update({ isLogin: false }, {
+                    where: { id: req.session.user.id },
+                });
+            } catch (error) {
+                console.error('Error updating user:', error);
+                // Handle the error appropriately, maybe redirect to an error page
+                res.status(500).send('Internal Server Error');
+            }
+        }
+    }
+
+    next();
 });
 
 app.use(express.json()); // for parsing application/json

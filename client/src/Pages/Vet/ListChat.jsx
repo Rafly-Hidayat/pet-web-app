@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function ListChat() {
+export default function ListChat({ search }) {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const navigate = useNavigate();
   const socket = io("http://localhost:8000", {
@@ -30,6 +30,15 @@ export default function ListChat() {
       setListChat(data.data);
     }
   }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const filterChats = data.data.filter((chat) =>
+        chat.user.fullName.toLowerCase().includes(search)
+      );
+      setListChat(filterChats);
+    }
+  }, [search]);
 
   return (
     <div className="h-full py-4">

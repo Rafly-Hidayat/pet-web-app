@@ -84,6 +84,12 @@ module.exports = {
 
             await User.update({ isLogin: true }, { where: { id: data.id } })
 
+            // Set last activity timestamp in the session
+            req.session.user = {
+                id: data.id,
+                lastActivity: Date.now(),
+            };
+
             return response({
                 res, statusCode: 200, message: 'Login Berhasil', data: returnedData, type: 'SUCCESS', name: 'login user'
             });
@@ -231,7 +237,7 @@ module.exports = {
             }
 
             const filePath = path.join(__dirname, '..', dataUser.image);
-            
+
             if (fs.existsSync(filePath)) {
                 return res.sendFile(filePath)
             }

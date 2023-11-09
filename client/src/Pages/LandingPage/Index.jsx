@@ -50,7 +50,7 @@ export default function Index() {
           className="w-[650px] hidden lg:flex"
         />
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-2 w-full p-3 px-5">
+      <div className="flex flex-wrap items-center justify-center gap-5 w-full p-5 px-5 absolute bottom-0">
         <div className="gap-1 flex items-center text-center">
           <BsWhatsapp className="text-xl" />
           <div className="text-sm">0813 99818479</div>

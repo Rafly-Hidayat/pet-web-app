@@ -8,11 +8,13 @@ import {
   RiLogoutBoxLine,
 } from "react-icons/ri";
 import { useEffect } from "react";
-import { Logout } from "../Utils/store";
+import { GetUserData, Logout } from "../Utils/store";
 
 export default function Navbar() {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const navigate = useNavigate();
+
+  const { isSuccess: successGetData, data } = GetUserData(auth?.id);
 
   const { isSuccess, mutateAsync } = Logout();
   const menus = [
@@ -41,6 +43,15 @@ export default function Navbar() {
       navigate("/");
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (successGetData) {
+      if (!data?.data?.isLogin) {
+        localStorage.clear();
+        navigate("/");
+      }
+    }
+  }, [successGetData]);
 
   useEffect(() => {
     function handleClickOutside() {
