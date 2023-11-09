@@ -30,7 +30,7 @@ export default function InputField({
     <div className="w-full flex flex-col">
       <div className="relative">
         {type === "experience" && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 bg-[#598665] rounded-r-md text-white">
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 bg-[#598665] rounded-r-md text-white z-[1]">
             <span>Tahun</span>
           </div>
         )}

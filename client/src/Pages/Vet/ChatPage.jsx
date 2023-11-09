@@ -33,6 +33,10 @@ export default function Chat() {
   }, [getRoomSuccess]);
 
   useEffect(() => {
+    console.log(user, room)
+    if (!user || !room) {
+      navigate('/vet')
+    }
     if (room) {
       socket.emit("joinRoom", room);
     }
@@ -84,7 +88,7 @@ export default function Chat() {
           className="text-4xl cursor-pointer"
           onClick={() => navigate("/vet")}
         />
-        <div className="font-semibold text-xl">{user.fullName}</div>
+        <div className="font-semibold text-xl">{user?.fullName}</div>
       </div>
       <hr className="border w-full" />
 

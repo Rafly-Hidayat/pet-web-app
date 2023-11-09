@@ -75,8 +75,11 @@ export default function ScheduleModal({
 
   const isDateSelectable = (date) => {
     const dayOperationIndex = operationDays.map(
-      (dayOperation) => listDays.findIndex((day) => day === dayOperation) + 1
+      (dayOperation) => listDays.findIndex((day) => day === dayOperation)
     );
+    console.log(operationDays)
+    console.log(dayOperationIndex)
+    console.log(date.getDay())
     return !dayOperationIndex?.includes(date.getDay());
   };
 
@@ -152,6 +155,7 @@ export default function ScheduleModal({
                 onSelect={setSelectedDate}
                 disabled={isDateSelectable}
                 fromDate={moment().toDate()}
+                toDate={moment().add(30, "days").toDate()}
                 modifiersClassNames={{
                   selected: "my-selected",
                   today: "my-today",
@@ -159,7 +163,6 @@ export default function ScheduleModal({
                 modifiersStyles={{
                   disabled: { fontSize: "75%" },
                 }}
-                toDate={moment().add(30, "days").toDate()}
               />
               <div className="flex flex-col items-center space-y-3 justify-center w-full">
                 <div className="text-lg font-semibold">Pilih jam</div>

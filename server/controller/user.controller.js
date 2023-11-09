@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require('fs');
+const cron = require('node-cron');
 const response = require('../utils/response');
 const { models: { User, Vet } } = require('../model/index');
 const { Op } = require("sequelize");
@@ -84,11 +85,16 @@ module.exports = {
 
             await User.update({ isLogin: true }, { where: { id: data.id } })
 
-            // Set last activity timestamp in the session
-            req.session.user = {
-                id: data.id,
-                lastActivity: Date.now(),
-            };
+            const job = cron.schedule(`*/30 * * * *`, async () => {
+                // Call the logout endpoint after 30 minutes
+                const update = await User.update({ isLogin: false }, { where: { id: data.id } })
+                console.log(update)
+                job.destroy(); // Remove the cron job after it runs once
+            }, {
+                scheduled: false, // Do not start the job immediately
+            });
+
+            job.start(); // Start the job after setting up the schedule
 
             return response({
                 res, statusCode: 200, message: 'Login Berhasil', data: returnedData, type: 'SUCCESS', name: 'login user'

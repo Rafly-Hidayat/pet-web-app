@@ -34,7 +34,7 @@ export default function RejectModal({ reject, closeModal }) {
                   }`}
                   onClick={() => reject(messageReject)}
                 >
-                  Reject
+                  Tolak
                 </div>
               </div>
             </div>

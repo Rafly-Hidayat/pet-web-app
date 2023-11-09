@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const http = require('http');
 const socketIo = require('socket.io');
-const session = require('express-session');
 
 // Import file
 const { models: { DataUser, User, Vet, Chat }, sequelize } = require('./model/index');
@@ -22,41 +21,6 @@ const io = socketIo(server, {
     maxHttpBufferSize: 1e8
 });
 
-
-// session
-app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-}));
-
-// Middleware to update last activity timestamp and check for auto-logout
-app.use(async (req, res, next) => {
-    console.log('sessionnnn oii  11', req.session)
-    if (req.session.user) {
-        console.log('sessionnnn oii  22')
-
-        const maxInactivity = 0.1 * 60 * 1000; // 30 minutes in milliseconds
-        const elapsedTime = Date.now() - req.session.user.lastActivity;
-
-        if (elapsedTime > maxInactivity && req.session.user.id) {
-            console.log('sessionnnn oii  33')
-            // Log out the user by updating isLogin to false in the database
-            try {
-                await User.update({ isLogin: false }, {
-                    where: { id: req.session.user.id },
-                });
-            } catch (error) {
-                console.error('Error updating user:', error);
-                // Handle the error appropriately, maybe redirect to an error page
-                res.status(500).send('Internal Server Error');
-            }
-        }
-    }
-
-    next();
-});
-
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -70,12 +34,18 @@ app.use(cors(corsOptions));
 
 // syncrhonize database and set default values
 (async () => {
-    await sequelize.sync();
+    await sequelize.sync({ force: true });
     // set default user
     const rowUsers = await User.count();
     if (rowUsers === 0) {
         // create a default user account
-        await User.create({ username: 'tesUsername', password: 'tesPassword', fullName: 'tesFullName', email: 'tesEmail@email.com', image: 'uploads/T.jpg' });
+        const defaultUser = [
+            { username: 'Rafly', password: 'Rafly123', fullName: 'Rafly Hidayat', email: 'Rafly@gmail.com', image: 'uploads/R.jpg' },
+            { username: 'Budi', password: 'Budi321', fullName: 'Bapa Budi', email: 'Budi@gmail.com', image: 'uploads/B.jpg' },
+            { username: 'Siti', password: 'Siti321', fullName: 'Siti Fatimah', email: 'Siti@gmail.com', image: 'uploads/S.jpg' },
+            { username: 'Dewi', password: 'Dewi321', fullName: 'Dewi Sartika', email: 'Dewi@gmail.com', image: 'uploads/D.jpg' },
+        ]
+        await User.bulkCreate(defaultUser);
     }
 
     // set default vet
@@ -90,6 +60,7 @@ app.use(cors(corsOptions));
                 user: {
                     username: 'Puji',
                     password: 'Puji321',
+                    email: 'Puji321@gmail.com',
                     fullName: 'Drh. Puji hertina ika wahyuni',
                     role: 'vet',
                     image: 'uploads/profile1.jpg'
@@ -102,6 +73,7 @@ app.use(cors(corsOptions));
                 user: {
                     username: 'Margaret',
                     password: 'Margaret321',
+                    email: 'Margaret321@gmail.com',
                     fullName: 'Drh. Margaret danik gultom',
                     role: 'vet',
                     image: 'uploads/profile2.jpg'

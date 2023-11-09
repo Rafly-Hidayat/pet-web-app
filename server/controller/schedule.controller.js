@@ -1,4 +1,5 @@
 const moment = require('moment')
+const cron = require('node-cron');
 const response = require('../utils/response')
 const { models: { Vet, User, Schedulled } } = require('../model/index')
 
@@ -71,6 +72,22 @@ const vetSchedule = async ({ vetId }) => {
 }
 
 module.exports = {
+    tes: (req, res) => {
+        // Your date string
+        const dateString = '11/09/2023 20:18';
+
+        // Parse the date using Moment.js
+        const scheduledDate = moment(dateString, 'L HH:mm');
+
+        // Set up the cron expression
+        const cronExpression = `${scheduledDate.minutes()} ${scheduledDate.hours()} ${scheduledDate.date()} ${scheduledDate.month() + 1} *`;
+
+        // Schedule the job
+        cron.schedule(cronExpression, () => {
+            console.log('Job is running at the scheduled date and time!', dateString);
+        });
+        return res.send(dateString)
+    },
 
     create: async (req, res) => {
         try {
@@ -122,7 +139,17 @@ module.exports = {
                 });
             }
 
-            const data = await Schedulled.create({ date: moment(date).locale('id').format('LL'), time, userId, vetId, symptom, status: 'draft' });
+            const data = await Schedulled.create({ date, time, userId, vetId, symptom, status: 'draft' });
+
+            const dateString = `${date} ${time}`;
+            const scheduledDate = moment(dateString, 'L HH:mm');
+
+            const cronExpression = `${scheduledDate.minutes()} ${scheduledDate.hours()} ${scheduledDate.date()} ${scheduledDate.month() + 1} *`;
+
+            cron.schedule(cronExpression, async () => {
+                const update = await Schedulled.update({ status: 'Finished' }, { where: { id: data.id } })
+                console.log('Job is running at the scheduled date and time!', update);
+            });
 
             return response({
                 res, statusCode: 200, message: 'Berhasil menambahkan jadwal temu', data, type: 'SUCCESS', name: 'create schedule'
@@ -206,7 +233,8 @@ module.exports = {
                             },
                         ]
                     }
-                ]
+                ],
+                order: [['createdAt', 'DESC']]
             })
 
             if (!data.length) {

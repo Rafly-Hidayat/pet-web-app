@@ -28,11 +28,12 @@ export default function Main() {
   return (
     <div className="bg-[#fdc074] pt-24 flex flex-col h-full px-4 lg:px-20 overflow-auto">
       <InputField
+        className={"mb-2"}
         placeholder="Cari Nama Pasien"
         value={inputSearch}
         onChange={(e) => setInputSearch(e.target.value)}
       />
-      <div className="bg-[#fdc074] sticky top-0 w-full flex items-center">
+      <div className="bg-[#fdc074] sticky top-0 w-full flex items-center pt-2">
         <div
           className={`w-[50%] text-center p-3 ${
             tab === "chat" &&

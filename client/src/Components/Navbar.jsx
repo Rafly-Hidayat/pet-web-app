@@ -22,11 +22,13 @@ export default function Navbar() {
       label: "Halaman Utama",
       icon: <RiHome4Line />,
       action: () => navigate("/"),
+      role: "all",
     },
     {
       label: "Profil",
       icon: <RiAccountCircleLine />,
       action: () => navigate("/profile"),
+      role: "user",
     },
     {
       label: "Keluar",
@@ -34,6 +36,7 @@ export default function Navbar() {
       action: async () => {
         await mutateAsync({ username: auth.username });
       },
+      role: "all",
     },
   ];
 
@@ -102,10 +105,12 @@ export default function Navbar() {
                 key={idx}
                 onClick={() => menu.action()}
               >
-                <div className="flex">
-                  <span className="text-lg">{menu.icon}</span>
-                  <div className="w-full text-sm block">{menu.label}</div>
-                </div>
+                {["all", auth.role].includes(menu.role) && (
+                  <div className="flex">
+                    <span className="text-lg">{menu.icon}</span>
+                    <div className="w-full text-sm block">{menu.label}</div>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

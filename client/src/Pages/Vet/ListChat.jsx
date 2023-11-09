@@ -3,8 +3,9 @@ import { GetPicture, VetListChat } from "../../Utils/store";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment/min/moment-with-locales";
 
-export default function ListChat({ search }) {
+export default function ListChat({ search = '' }) {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const navigate = useNavigate();
   const socket = io("http://localhost:8000", {
@@ -27,7 +28,10 @@ export default function ListChat({ search }) {
 
   useEffect(() => {
     if (isSuccess) {
-      setListChat(data.data);
+      const filterChats = data.data.filter((chat) =>
+        chat.user.fullName.toLowerCase().includes(search)
+      );
+      setListChat(filterChats);
     }
   }, [isSuccess, data]);
 
@@ -74,20 +78,20 @@ function ChatComponent({ chat, handleClick }) {
     >
       {successGetPicture ? (
         <div className="avatar">
-          <div className="w-12 h-12 rounded-full">
+          <div className="w-10 md:w-12 h-10 md:h-12 rounded-full">
             <img src={URL.createObjectURL(picture)} alt="pp" />
           </div>
         </div>
       ) : (
-        <div className="w-12 h-12 rounded-full bg-red-400" />
+        <div className="w-10 md:w-12 h-10 md:h-12 rounded-full bg-red-400" />
       )}
-      <div className="w-full flex justify-between items-center">
-        <div className="flex flex-col justify-start">
+      <div className="grid grid-cols-3 text-xs md:text-base w-full">
+        <div className="flex flex-col justify-start col-span-2">
           <div className="font-semibold lg:text-lg">{chat.user.fullName}</div>
-          <div className="">{chat.message}</div>
+          <div className="truncate">{chat.message}</div>
         </div>
         <div className="flex flex-col justify-end items-end">
-          <div>{chat.date.split(" ")[0]}</div>
+          <div>{moment(chat.date).locale("id").format("DD MMM YY")}</div>
           <div>{chat.date.split(" ")[1]}</div>
         </div>
       </div>
