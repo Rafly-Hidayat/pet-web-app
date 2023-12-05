@@ -79,6 +79,32 @@ app.use(cors(corsOptions));
                     image: 'uploads/profile2.jpg'
                 },
             },
+            {
+                experience: Math.floor(Math.random() * 22),
+                operationHours: '08:00 - 17:00',
+                operationDays: JSON.stringify(['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu', 'Minggu']),
+                user: {
+                    username: 'Rizky',
+                    password: 'Rizky321',
+                    email: 'Rizky321@gmail.com',
+                    fullName: 'Drh. Rizky',
+                    role: 'vet',
+                    image: 'uploads/profile1.jpg'
+                },
+            },
+            {
+                experience: Math.floor(Math.random() * 22),
+                operationHours: '08:00 - 17:00',
+                operationDays: JSON.stringify(['Rabu']),
+                user: {
+                    username: 'Husna',
+                    password: 'Husna321',
+                    email: 'Husna321@gmail.com',
+                    fullName: 'Drh. Husna',
+                    role: 'vet',
+                    image: 'uploads/profile2.jpg'
+                },
+            },
         ]
 
         await Vet.bulkCreate(defaultVet, {
