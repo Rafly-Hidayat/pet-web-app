@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const http = require('http');
 const socketIo = require('socket.io');
+const router = express.Router()
 
 // Import file
 const { models: { DataUser, User, Vet, Chat }, sequelize } = require('./model/index');
@@ -34,7 +35,7 @@ app.use(cors(corsOptions));
 
 // syncrhonize database and set default values
 (async () => {
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     // set default user
     const rowUsers = await User.count();
     if (rowUsers === 0) {
@@ -165,5 +166,10 @@ app.use('/user', userRoutes);
 app.use('/vet', vetRoutes);
 app.use('/schedule', scheduleRoutes);
 app.use('/chat', chatRoutes);
+
+router.get('/', (req, res) => {
+    res.send('welcome')
+})
+app.use(router)
 
 server.listen(port, () => { console.info(`Server is running on port ${port}`) }); // listen port
