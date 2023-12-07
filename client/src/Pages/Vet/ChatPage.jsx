@@ -13,7 +13,10 @@ export default function Chat() {
   const location = useLocation();
   const { user, roomId } = location.state || {};
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
-  const socket = io("http://localhost:8000", {
+  // const socket = io("http://localhost:8000", {
+  //   transports: ["websocket", "polling"],
+  // });
+  const socket = io("https://api-bulubulu.onrender.com", {
     transports: ["websocket", "polling"],
   });
   const queryClient = useQueryClient();

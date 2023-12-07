@@ -8,7 +8,10 @@ import moment from "moment/min/moment-with-locales";
 export default function ListChat({ search = '' }) {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
   const navigate = useNavigate();
-  const socket = io("http://localhost:8000", {
+  // const socket = io("http://localhost:8000", {
+  //   transports: ["websocket", "polling"],
+  // });
+  const socket = io("https://api-bulubulu.onrender.com", {
     transports: ["websocket", "polling"],
   });
   const queryClient = useQueryClient();
